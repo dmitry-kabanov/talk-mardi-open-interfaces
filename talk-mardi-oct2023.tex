@@ -1,0 +1,101 @@
+%!TEX root
+\documentclass[11pt, aspectratio=169]{beamer}
+\usetheme[numbering=fraction]{metropolis}
+
+% -----------------------------------------------------------------------------
+% Fonts
+\usepackage[utf8]{inputenc}
+\usepackage[defaultsans,scale=1.0]{lato}
+\usepackage{fourier}
+\usepackage[scale=1.05]{inconsolata}
+\usepackage{microtype}
+\usefonttheme[onlymath]{serif}
+
+% -----------------------------------------------------------------------------
+% Graphics
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage[beamer,customcolors]{hf-tikz}
+\usetikzlibrary{arrows.meta}
+\tikzset{
+  every path/.style={thick},
+}
+
+% -----------------------------------------------------------------------------
+% Define useful colors.
+\colorlet{black}{black!50!gray}
+\colorlet{green}{green!50!gray}
+\colorlet{blue}{blue!50!gray}
+
+\colorlet{CBlue}{blue!15}
+\colorlet{CBlueD}{blue!95!gray}
+\colorlet{CRed}{red!15}
+\colorlet{CRedD}{red!65!gray}
+\colorlet{CGreenD}{green!60!gray}
+\colorlet{COrange}{orange}
+
+% -----------------------------------------------------------------------------
+% Title info
+\title{TA2 M2: Open Interfaces for Scientific Computing}
+\author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
+\institute{University of Münster}
+\date{17 October 2023}
+
+% -----------------------------------------------------------------------------
+\begin{document}
+\maketitle
+
+\begin{frame}{Typical problem}
+  \begin{itemize}
+    \item Student Floyd is mostly proficient in Python
+    \item However, for the new project, he needs to run a Monte-Carlo
+          simulation on a forward model implemented as a C solver
+    \item Which means that he needs to write bindings to invoke the solver
+    \item He learns about another solver and wants to try it
+    \item \alert{Two problems:} different languages and different interfaces
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Traditional way}
+  \begin{minipage}[0.45\textwidth]
+    \begin{itemize}
+      \item For a solver in C provide bindings to Python, Julia, R, \dots
+      \item Repeat for a set of $I$ implementations of algorithms and $L$ languages
+      \item It leads to $I \times L$ amount of work if we want to provide
+            bindings for each algorithm in each language
+    \end{itemize}
+  \end{minipage}
+  \begin{minipage}[0.45\textwidth]
+    \input{tikz/pairwise_bindings.tex}
+  \end{minipage}
+
+\end{frame}
+
+\begin{frame}{Another solution}
+  \begin{itemize}
+    \item To solve both of this problems:
+          \begin{itemize}
+            \item provide automatic bindings between different languages
+            \item provide generic interfaces for typical numerical problems
+            \item Examples of generic interfaces are \texttt{scipy.integrate} in Python
+                  and \texttt{DifferentialEquations.jl} in Julia for solving ordinary
+                  differential equations
+            \item They target only one user language
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{MaRDI Open Interfaces}
+  To solve both problems simultaneously:
+  \begin{itemize}
+    \item Provide a mediator library \texttt{liboif} that handles
+          data marshalling between different languages and provides a set
+          of generic interfaces for typical numerical problems
+    \item Each interface allows for many implementations
+    \item For $I$ implementations and $L$ languages leads to $I + L$
+          amount of work
+  \end{itemize}
+\end{frame}
+
+\end{document}
