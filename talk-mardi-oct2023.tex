@@ -1,5 +1,4 @@
-%!TEX root
-\documentclass[11pt, aspectratio=169]{beamer}
+\documentclass[10pt, aspectratio=169, progressbar=frametitle]{beamer}
 \usetheme[numbering=fraction]{metropolis}
 
 % -----------------------------------------------------------------------------
@@ -17,10 +16,10 @@
 \usepackage{pgfplots}
 \usepackage{tikz}
 \usepackage[beamer,customcolors]{hf-tikz}
-\usetikzlibrary{arrows.meta}
-\tikzset{
-  every path/.style={thick},
-}
+\usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric}
+\input{tikz/styles.tex}
+
+\graphicspath{{./assets}}
 
 % -----------------------------------------------------------------------------
 % Define useful colors.
@@ -34,6 +33,9 @@
 \colorlet{CRedD}{red!65!gray}
 \colorlet{CGreenD}{green!60!gray}
 \colorlet{COrange}{orange}
+
+% -----------------------------------------------------------------------------
+\setbeamersize{text margin left=0.5cm, text margin right=0.5cm}
 
 % -----------------------------------------------------------------------------
 % Title info
@@ -58,18 +60,17 @@
 \end{frame}
 
 \begin{frame}{Traditional way}
-  \begin{minipage}[0.45\textwidth]
+  \begin{minipage}{0.45\textwidth}
     \begin{itemize}
       \item For a solver in C provide bindings to Python, Julia, R, \dots
       \item Repeat for a set of $I$ implementations of algorithms and $L$ languages
       \item It leads to $I \times L$ amount of work if we want to provide
             bindings for each algorithm in each language
     \end{itemize}
-  \end{minipage}
-  \begin{minipage}[0.45\textwidth]
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
     \input{tikz/pairwise_bindings.tex}
   \end{minipage}
-
 \end{frame}
 
 \begin{frame}{Another solution}
@@ -87,15 +88,26 @@
 \end{frame}
 
 \begin{frame}{MaRDI Open Interfaces}
-  To solve both problems simultaneously:
-  \begin{itemize}
-    \item Provide a mediator library \texttt{liboif} that handles
-          data marshalling between different languages and provides a set
-          of generic interfaces for typical numerical problems
-    \item Each interface allows for many implementations
-    \item For $I$ implementations and $L$ languages leads to $I + L$
-          amount of work
-  \end{itemize}
+  \begin{minipage}{0.45\textwidth}
+    To solve both problems simultaneously:
+    \begin{itemize}
+      \item Provide a mediator library \texttt{liboif} that handles
+            data marshalling between different languages and provides a set
+            of generic interfaces for typical numerical problems
+      \item Each interface allows for many implementations
+      \item For $I$ implementations and $L$ languages leads to $I + L$
+            amount of work
+    \end{itemize}
+  \end{minipage}\hfill%
+  \begin{minipage}{0.50\textwidth}
+    \input{tikz/oif_bindings.tex}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Software architecture}
+  \begin{center}
+    \includegraphics[scale=0.09]{arch.png}
+  \end{center}
 \end{frame}
 
 \end{document}
