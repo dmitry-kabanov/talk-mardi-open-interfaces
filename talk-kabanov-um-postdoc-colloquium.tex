@@ -39,10 +39,10 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{TA2 M2: Open Interfaces for Scientific Computing}
-\author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
+\title{Open Interfaces for Scientific Computing}
+\author{Dmitry I. Kabanov, Ren\'e Fritze, Stephan Rave, Mario Ohlberger}
 \institute{University of Münster}
-\date{17 October 2023}
+\date{9 November 2023}
 
 % -----------------------------------------------------------------------------
 \begin{document}
@@ -78,13 +78,14 @@
   \begin{itemize}
     \item provide automatic bindings between different languages
     \item provide generic interfaces for typical numerical problems
-    \item Examples of generic interfaces are \texttt{scipy.integrate.solve\_ivp} in Python
-          and \texttt{DifferentialEquations.jl} in Julia for solving ordinary
-          differential equations
+    \item Examples of generic interfaces are \texttt{scipy.optimize} in Python
+          and \texttt{DifferentialEquations.jl} in Julia
+          for solving differential equations
   \end{itemize}
 \end{frame}
 
-\begin{frame}{MaRDI Open Interfaces}
+\begin{frame}{Open Interfaces subproject of the MaRDI project
+  (\url{mardi4nfdi.de})}
   \begin{minipage}{0.45\textwidth}
     To solve both problems simultaneously:
     \begin{itemize}
@@ -111,8 +112,10 @@
   \begin{itemize}
     \item Types:
       \begin{itemize}
-        \item \texttt{OIF\_F64} (64-bit floating-point numbers, a.k.a. C double),
+        \item \texttt{OIF\_F64} (64-bit floating-point numbers, a.k.a. C \texttt{double}),
         \item \texttt{OIF\_ARRAY\_F64} (arrays of doubles)
+        \item \texttt{OIF\_CALLBACK} user-defined functions
+          (e.g., right-hand side functions of differential equations)
       \end{itemize}
     \item Languages: Python, C. For C bindings, special structure \texttt{OIFArrayF64} and auxiliary
       functions are implemented to conveniently pass arrays
@@ -121,6 +124,7 @@
       \begin{itemize}
         \item quadratic equations: $ax^2 + bx + c = 0$
         \item systems of linear algebraic equations: $Ax = b$
+        \item initial value problems: $y'(t) = f(t, y),\ y(t_0) = y_0$
       \end{itemize}
   \end{itemize}
 \end{frame}
