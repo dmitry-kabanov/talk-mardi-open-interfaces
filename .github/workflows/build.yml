@@ -10,13 +10,25 @@ on:
 
 jobs:
   build:
-    #runs-on: ubuntu-latest
-    container:
-      image: texlive/texlive
+    runs-on: ubuntu-latest
 
     steps:
+    #- name: Install Git LFS  # Git LFS is large file storage for binary files
+    #  run: |
+    #    sudo apt-get install -y git-lfs
+    #    git lfs install
+
+    - name: Install Texlive
+      run: |
+        sudo apt-get install -y texlive-latex-base texlive-latex-extra
+        sudo apt-get install -y texlive-latex-recommended texlive-fonts-extra
+        sudo apt-get install -y latexmk
+
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # This ensures a full Git history is fetched, including LFS objects
+        lfs: true       # Enable Git LFS, because images are in LFS
 
     - name: Compile LaTeX Beamer with latexmk
       run: |
