@@ -1,0 +1,23 @@
+name: Build LaTeX document using latexmk
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    #runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Compile LaTeX Beamer with latexmk
+      run: |
+        latexmk -pdf -interaction=nonstopmode -halt-on-error talk*.tex
