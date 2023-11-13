@@ -1,4 +1,6 @@
-# MaRDI "Open Interfaces for Scientific Computing"
+# "MaRDI Open Interfaces for Scientific Computing" slides
+
+[![Build LaTeX document using Latexmk](https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/actions/workflows/build.yml/badge.svg)](https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/actions/workflows/build.yml)
 
 This repository contains slides about my work on the
 [MaRDI](https://mardi4nfdi.de) subproject
