@@ -1,4 +1,4 @@
-name: Build LaTeX document using latexmk
+name: Build LaTeX document using Latexmk
 
 on:
   push:
