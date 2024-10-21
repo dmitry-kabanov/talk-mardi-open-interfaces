@@ -257,6 +257,11 @@ pythontex-files-*/
 TSWLatexianTemp*
 
 ## Editors:
+# Emacs
+_minted*/
+.auctex-auto/
+.dir-locals.el
+
 # WinEdt
 *.bak
 *.bak*
