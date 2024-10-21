@@ -14,6 +14,8 @@
 % -----------------------------------------------------------------------------
 % Typography
 \usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{multirow}
 
 % -----------------------------------------------------------------------------
 % Graphics
@@ -47,10 +49,12 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{Simplifying Interoperability in Scientific Computing\\via MaRDI Open Interfaces}
+\title{%
+  Improving Interoperability in Scientific Computing\\
+  via MaRDI Open Interfaces}
 \author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Institute for Analysis and Numerics, University of Münster}
-\date{{\large PDESoft'2024, Cambridge, United Kingdom}}
+\date{{\large 2nd MaRDI Workshop on Scientific Computing, Magdeburg, Germany}\\{16--18 October, 2024}}
 \titlegraphic{\vspace{6cm}\hspace{8.0cm}
   % \includegraphics[scale=0.5]{Logo_UniMuenster_2023_RGB}%
   % \includegraphics[scale=0.137]{MM_Logo_2018_cmyk}\phantom{text}\par
@@ -63,22 +67,26 @@
 
 \begin{frame}{Typical situation in scientific computing}
   \begin{itemize}
-    \item Often a computational scientist requires
-          a combination of multiple solvers together to conduct experiments
+    \item Often computational scientists need
+          to combine multiple solvers to conduct experiments
+    \item They have a preferred language but some solvers are implemented
+          not in this language
     \item For example, they prefer to conduct experiments using Python
-          by they need to invoke a solver in C
-    \item Which means that they need to write bindings to invoke the solver
-    \item Further in a project, there's a need to replace the solver with
-          another one
-    \item \alert{Two problems:} different languages and different interfaces
+          but a part of the experiment must use a solver written in C
+    \item If the bindings to Python are not available, they need to write
+          them themselves
+    \item \dots Later, there's a need to replace the solver with
+          another one $\implies$ code modification
+    \item<2-> \alert{Two problems:} different languages and different interfaces
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Traditional way}
+\begin{frame}{Traditional way: direct bindings}
   \begin{minipage}{0.45\textwidth}
     \begin{itemize}
-      \item For a solver in C provide bindings to Python, Julia, R, \dots, $L$ languages
-      \item Repeat for a set of $I$ implementations of algorithms and $L$ languages
+      \item For a solver in C provide bindings to~$L$~languages: Python, Julia, R, \dots
+      \item Repeat for a set of $I$ implementations of numerical algorithms
+            and~$L$ languages
       \item It leads to $\mathcal O(L \times I)$ amount of work if we want to provide
             bindings for each algorithm in each language
     \end{itemize}
@@ -101,13 +109,13 @@
                           and \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
                   \end{itemize}
           \end{itemize}
-    \item However, the above packages provide solutions only
-          to the multiple-interfaces problem, not to the problem
+    \item However, the above packages concentrate on solving only
+          the problem of different interfaces, not to the problem
           of the multiple languages
   \end{itemize}
 \end{frame}
 
-\begin{frame}{MaRDI Open Interfaces}
+\begin{frame}{MaRDI Open Interfaces (TA2 Measure 2)}
   \begin{minipage}{0.45\textwidth}
     To solve both problems simultaneously:
     \begin{itemize}
@@ -117,7 +125,7 @@
               \item provides a set of generic interfaces
                     for typical numerical problems
             \end{itemize}
-      \item Each interface abstracts out the descrepancies
+      \item Each interface abstracts out the discrepancies
             of different implementations
       \item For $L$ languages and $I$ implementations leads to
             the $\mathcal O (I + L)$ amount of work
@@ -128,7 +136,7 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}{Software architecture}
+\begin{frame}{Architecture of MaRDI Open Interfaces}
   \centering
   \includegraphics[scale=0.09]{arch}
 \end{frame}
@@ -136,7 +144,7 @@
 \begin{frame}{Currently supported languages, data types, problems}
   \begin{itemize}
     \onslide<1->
-    \item Languages: C, Python, Julia
+    \item Languages: C, Python, Julia (partially)
     \onslide<2->
     \item Data types:
           \begin{itemize}
@@ -149,18 +157,33 @@
             \item \texttt{OIF\_CONFIG\_DICT} - option-value pairs
           \end{itemize}
     \onslide<3->
-    \item Interfaces:
-          \begin{itemize}
-            \item (Toy problem) quadratic equations: $ax^2 + bx + c = 0$
-            \item systems of linear algebraic equations: $Ax = b$
-            \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
-          \end{itemize}
+    % \item Interfaces:
+    %       \begin{itemize}
+    %         \item (Toy problem) quadratic equations: $ax^2 + bx + c = 0$
+    %         % \item systems of linear algebraic equations: $Ax = b$
+    %         \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
+    %       \end{itemize}
+    \item All data are passed via pointers---no copies of large arrays
+    \item On implementation side function are invoked via
+          the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
+          in C and via C API in embedded Python/Julia
   \end{itemize}
 
-  \onslide<4->
-  {\small For C, special data structure \texttt{OIFArrayF64} is developed that packs
-  together array's data, number of dimensions, and shape.
-  This provides unified interfaces in different languages}
+\end{frame}
+
+
+\begin{frame}{Support for C}
+  \small For C, special data structures are developed to ensure consistent with Python/Julia interfaces:
+  \begin{itemize}
+    \item \texttt{OIFArrayF64} packs array data along with shape\\
+          \texttt{OIFArrayF64 *oif\_create\_array\_f64(int nd, intptr\_t *dimensions)}\\
+          \texttt{OIFArrayF64 *oif\_init\_array\_f64\_from\_data(nd, dimensions, const double *data)
+}
+      \item<2-> \texttt{OIFConfigDict} packs key-value pairs together\\
+          \texttt{void oif\_config\_dict\_add\_int(OIFConfigDict *dict, const char *key, int value);}\\
+          \texttt{void oif\_config\_dict\_add\_double(OIFConfigDict *dict, const char *key, double value);}\\
+          \texttt{void oif\_config\_dict\_add\_str(OIFConfigDict *dict, const char *key, const char *value);}
+  \end{itemize}
 \end{frame}
 
 \section{Examples with the interface for initial-value problems for ODEs (time integration)}
@@ -343,18 +366,35 @@
   }
 \end{frame}
 
-\begin{frame}{MaRDI}
+\begin{frame}{Performance study 2}
+
+  We solve inviscid Burgers' equation from Python using
   \begin{itemize}
-    \item This project is part of MaRDI---Mathematical Research Data Initiative.
-    \item The overall goal of MaRDI is to improve infrastructure related
-          to mathematics and other scientific dispiplines
-    \item Points of interests are data formats, FAIRness of data
-          (Findable, Accessible, Interoperable, Reproducable), computational
-          workflows
+  \item SciPy\footnote{\url{https://scipy.org/}}
+  natively and via Open Interfaces
+    \item \texttt{OrdinaryDiffEq.jl}\footnote{%
+          \url{https://github.com/SciML/OrdinaryDiffEq.jl}} Julia's package
+  \item Used algorithm is the Dormand--Prince 5(4) method
+  \item Results are averages of 30 trials, with most uncertainties < 0.01
   \end{itemize}
-  \vspace{-2cm}
-  \includegraphics[scale=0.7]{MaRDI_Logo_S_5_cmyk}
+
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{@{}lrrrrr@{}}
+      \toprule
+      \multirow{2}{*}{\centering Method} & \multicolumn{5}{c}{$N$} \\
+\cmidrule(l){2-6}
+& 200 & 400 & 800 & 1600 & 3200 \\
+    \midrule
+    Native & 0.01 & 0.01 & 0.04 & 0.13 & 0.49 \\
+    OIF to Python & 0.01 & 0.02 & 0.04 & 0.14 & 0.50 \\
+    OIF to Julia & 0.05 & 0.06 & 0.11 & 0.24 & 0.69 \\
+    \bottomrule
+    \end{tabular}
+  \end{table}
 \end{frame}
+
+\input{slides/mardi.tex}
 
 \begin{frame}[standout]{}
   \centering

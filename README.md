@@ -12,6 +12,7 @@ This repository contains slides about my work on the
 - 2023-11-09: University of Muenster Postdoc Colloqium
 - 2024-06-11: ESCO'2024, Pilsen, Chech Republic
 - 2024-07-03: PDESoft'2024, Cambridge, UK
+- 2024-10-16: 2nd Workshop on Scientific Computing, Magdeburg, Germany
 
 ## License
 
@@ -19,4 +20,4 @@ No materials from the actual slides can be used without permission.
 You can use technical (LaTeX-related) things from this repository freely,
 such as code from the preamble and `.latexmkrc` file.
 
-© 2024 Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger
+© 2023-2024 Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger
