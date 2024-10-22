@@ -1,12 +1,14 @@
 \documentclass[10pt, aspectratio=169, progressbar=frametitle]{beamer}
 \usetheme[numbering=fraction]{metropolis}
+% \usetheme[language=en]{UniMS}
+
+\setbeamertemplate{headline}{}
 
 % -----------------------------------------------------------------------------
 % Fonts
 \usepackage[defaultsans,scale=1.0]{lato}
 \usepackage{fourier}
 \usepackage[scale=1.05]{inconsolata}
-\usepackage{microtype}
 \usefonttheme[onlymath]{serif}
 
 % -----------------------------------------------------------------------------
@@ -15,13 +17,11 @@
 
 % -----------------------------------------------------------------------------
 % Graphics
-\usepackage{graphicx}
 \usepackage{pgfplots}
 \usepackage{tikz}
 \usepackage[beamer,customcolors]{hf-tikz}
 \usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric}
 \input{tikz/styles.tex}
-
 \graphicspath{{./assets}}
 
 % -----------------------------------------------------------------------------
@@ -47,10 +47,10 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{Open Interfaces for Scientific Computing}
+\title{Simplifying Interoperability in Scientific Computing\\via MaRDI Open Interfaces}
 \author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Institute for Analysis and Numerics, University of Münster}
-\date{{\large ESCO, June 2024, Pilsen}}
+\date{{\large PDESoft'2024, Cambridge, United Kingdom}}
 \titlegraphic{\vspace{6cm}\hspace{8.0cm}
   % \includegraphics[scale=0.5]{Logo_UniMuenster_2023_RGB}%
   % \includegraphics[scale=0.137]{MM_Logo_2018_cmyk}\phantom{text}\par
