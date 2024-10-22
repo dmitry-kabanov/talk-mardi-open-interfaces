@@ -1,0 +1,364 @@
+\documentclass[10pt, aspectratio=169, progressbar=frametitle]{beamer}
+\usetheme[numbering=fraction]{metropolis}
+
+% -----------------------------------------------------------------------------
+% Fonts
+\usepackage[defaultsans,scale=1.0]{lato}
+\usepackage{fourier}
+\usepackage[scale=1.05]{inconsolata}
+\usepackage{microtype}
+\usefonttheme[onlymath]{serif}
+
+% -----------------------------------------------------------------------------
+% Typography
+\usepackage{siunitx}
+
+% -----------------------------------------------------------------------------
+% Graphics
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage[beamer,customcolors]{hf-tikz}
+\usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric}
+\input{tikz/styles.tex}
+
+\graphicspath{{./assets}}
+
+% -----------------------------------------------------------------------------
+% Define useful colors.
+\colorlet{black}{black!50!gray}
+\colorlet{green}{green!50!gray}
+\colorlet{blue}{blue!50!gray}
+
+\colorlet{CBlue}{blue!15}
+\colorlet{CBlueD}{blue!95!gray}
+\colorlet{CRed}{red!15}
+\colorlet{CRedD}{red!65!gray}
+\colorlet{CGreenD}{green!60!gray}
+\colorlet{COrange}{orange}
+
+% -----------------------------------------------------------------------------
+
+\usepackage{derivative}
+\usepackage{minted}
+
+% -----------------------------------------------------------------------------
+\setbeamersize{text margin left=0.5cm, text margin right=0.5cm}
+
+% -----------------------------------------------------------------------------
+% Title info
+\title{Open Interfaces for Scientific Computing}
+\author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
+\institute{Institute for Analysis and Numerics, University of Münster}
+\date{{\large ESCO, June 2024, Pilsen}}
+\titlegraphic{\vspace{6cm}\hspace{8.0cm}
+  % \includegraphics[scale=0.5]{Logo_UniMuenster_2023_RGB}%
+  % \includegraphics[scale=0.137]{MM_Logo_2018_cmyk}\phantom{text}\par
+  \includegraphics[scale=0.3]{logos}\phantom{text}\par
+}
+
+% -----------------------------------------------------------------------------
+\begin{document}
+\maketitle
+
+\begin{frame}{Typical situation in scientific computing}
+  \begin{itemize}
+    \item Often a computational scientist requires
+          a combination of multiple solvers together to conduct experiments
+    \item For example, they prefer to conduct experiments using Python
+          by they need to invoke a solver in C
+    \item Which means that they need to write bindings to invoke the solver
+    \item Further in a project, there's a need to replace the solver with
+          another one
+    \item \alert{Two problems:} different languages and different interfaces
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Traditional way}
+  \begin{minipage}{0.45\textwidth}
+    \begin{itemize}
+      \item For a solver in C provide bindings to Python, Julia, R, \dots, $L$ languages
+      \item Repeat for a set of $I$ implementations of algorithms and $L$ languages
+      \item It leads to $\mathcal O(L \times I)$ amount of work if we want to provide
+            bindings for each algorithm in each language
+    \end{itemize}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+    \input{tikz/pairwise_bindings.tex}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Another solution}
+  \begin{itemize}
+    \item To solve both of this problems:
+          \begin{itemize}
+            \item provide automatic bindings between different languages
+            \item provide generic interfaces for typical numerical problems
+            \item Examples of generic interfaces are:
+                  \begin{itemize}
+                    \item \texttt{PyMOR} for model-order reduction simulations
+                    \item  \texttt{scipy.integrate} in Python
+                          and \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
+                  \end{itemize}
+          \end{itemize}
+    \item However, the above packages provide solutions only
+          to the multiple-interfaces problem, not to the problem
+          of the multiple languages
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{MaRDI Open Interfaces}
+  \begin{minipage}{0.45\textwidth}
+    To solve both problems simultaneously:
+    \begin{itemize}
+      \item Provide a mediator library \texttt{OIF} that:
+            \begin{itemize}
+              \item handles data marshalling between different languages
+              \item provides a set of generic interfaces
+                    for typical numerical problems
+            \end{itemize}
+      \item Each interface abstracts out the descrepancies
+            of different implementations
+      \item For $L$ languages and $I$ implementations leads to
+            the $\mathcal O (I + L)$ amount of work
+    \end{itemize}
+  \end{minipage}\hfill%
+  \begin{minipage}{0.50\textwidth}
+    \input{tikz/oif_bindings.tex}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Software architecture}
+  \centering
+  \includegraphics[scale=0.09]{arch}
+\end{frame}
+
+\begin{frame}{Currently supported languages, data types, problems}
+  \begin{itemize}
+    \onslide<1->
+    \item Languages: C, Python, Julia
+    \onslide<2->
+    \item Data types:
+          \begin{itemize}
+            \item \texttt{OIF\_INT} - 32-bit integers
+            \item \texttt{OIF\_FLOAT64} - 64-bit floating-point numbers
+            \item \texttt{OIF\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
+            \item \texttt{OIF\_STR} - strings
+            \item \texttt{OIF\_CALLBACK} - callback functions
+            \item \texttt{OIF\_USER\_DATA} - user-data objects of volatile type
+            \item \texttt{OIF\_CONFIG\_DICT} - option-value pairs
+          \end{itemize}
+    \onslide<3->
+    \item Interfaces:
+          \begin{itemize}
+            \item (Toy problem) quadratic equations: $ax^2 + bx + c = 0$
+            \item systems of linear algebraic equations: $Ax = b$
+            \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
+          \end{itemize}
+  \end{itemize}
+
+  \onslide<4->
+  {\small For C, special data structure \texttt{OIFArrayF64} is developed that packs
+  together array's data, number of dimensions, and shape.
+  This provides unified interfaces in different languages}
+\end{frame}
+
+\section{Examples with the interface for initial-value problems for ODEs (time integration)}
+
+\begin{frame}[fragile]{Interface for initial-value problems for ODEs}
+  \begin{minipage}{\dimexpr0.22\textwidth-2\tabcolsep}
+    \begin{align*}
+      y'(t)  & = f(t, y) \\
+      y(t_0) & = y_0
+    \end{align*}
+  \end{minipage}
+  \begin{minipage}{\dimexpr0.73\textwidth-2\tabcolsep}
+    {\footnotesize
+    \begin{minted}{Python}
+      # Set initial value y(t0) = y0.
+      set_initial_value(y0: array, t0: float64)
+
+      # Specify right-hand side function with signature
+      # f(t: float64, y: array, ydot: array, user_data: object).
+      set_rhs_fn(f: Callback)
+
+      # Specify relative and absolute tolerances.
+      set_tolerances(rtol: float64, atol: float64)
+
+      # Set additional data passed to right-hand side function.
+      set_user_data(user_data: object)
+
+      # Set integrator and its parameters
+      set_integrator(integrator_name: str, params: object)
+
+      # Integrate to time t and write solution to y.
+      integrate(t: float64, y: array)
+    \end{minted}
+    }
+  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Example call from C}
+  \begin{minted}[beameroverlays, escapeinside=||]{C}
+    char *impl_name = "scipy_ode";
+    OIFArrayF64 *y0 = oif_create_array_f64(1, (intptr_t[1]){N});
+    OIFArrayF64 *y = oif_create_array_f64(1, (intptr_t[1]){N});
+    OIFArrayF64 *grid = oif_create_array_f64(1, (intptr_t[1]){N});
+
+    ImplHandle |\textbf<3>{implh}| = oif_init_impl("ivp", |\textbf<2>{impl\_name}|, 1, 0);
+    status = oif_ivp_set_initial_value(|\textbf<3>{implh}|, |\textbf<4>{y0}|, |\textbf<4>{t0}|);
+    status = oif_ivp_set_rhs_fn(|\textbf<3>{implh}|, |\textbf<5>{rhs}|);
+    status = oif_ivp_set_user_data(|\textbf<3>{implh}|, |\textbf<6>{&dx}|);
+
+    for (int i = 0; i < n_time_steps; ++i) {
+        t = t0 + (i + 1) * dt;
+        status = oif_ivp_integrate(|\textbf<3>{implh}|, t, y);
+    }
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Example 1: Explicit solvers}
+  \begin{minipage}{\dimexpr0.6\textwidth - 2\tabcolsep}
+  Inviscid Burgers' equation:
+    \begin{align*}
+      &\pdv{u}{t} + \pdv{\left( u^{2} / 2 \right)}{x} = 0,
+      \quad t \in [0, 2], \quad x \in [0, 2] \\
+      &u(t, 0) = 0.5 - 0.25 \sin \left( \pi x \right)\\
+      &u(t, 0) = u(t, 2)
+    \end{align*}
+
+    Implementations:
+    \begin{itemize}
+      \item Sundials CVODE, Adams--Moulton method
+      \item \texttt{scipy.integrate.ode}, Dormand--Prince method
+      \item \texttt{OrdinaryDiffEq}, Tsitouras method
+    \end{itemize}
+  \end{minipage}\hfill
+  \begin{minipage}{\dimexpr0.4\textwidth - 2\tabcolsep}
+    \includegraphics[scale=0.35]{ivp_c_burgers_eq}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Example 2: Implicit solvers}
+  \begin{columns}
+  \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+    Van der Pol equation:
+    \[
+      \odv[order=2]{x}{t} - \mu
+      \left(
+        1 - x^{2}
+      \right) \odv{x}{t} + x = 0
+    \]
+    with \(\mu = 1000\) (stiff).\par
+
+    \vspace{1.7em}
+    \onslide<2->
+    User code in Python:
+    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
+      p = VdPEquationProblem(
+        mu=1000,
+        tfinal=3000
+      )
+      s = IVP("scipy_ode")
+      s.set_initial_value(p.y0, p.t0)
+      s.set_rhs_fn(p.compute_rhs)
+    \end{minted}
+  \column{0.6\textwidth - 2\tabcolsep}
+    \onslide<3-5>
+    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
+      s.set_integrator("dopri5", {"nsteps": 100_000})
+    \end{minted}
+    Solving with \texttt{scipy.ode.dopri5} fails:\\
+    \texttt{UserWarning: dopri5: problem is probably stiff}
+
+    \vspace{1.7em}
+    \onslide<4-5>
+    Switching to \texttt{scipy.ode.vode} with BDF succeeds:
+    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
+      s.set_integrator("vode", {"nsteps": 40_000})
+    \end{minted}
+
+    \vspace{1.7em}
+    \onslide<5-5>
+    More efficient solution using \texttt{OrdinaryDiffEq.jl}:
+    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
+      s = IVP("jl_diffeq")
+      s.set_integrator("Rosenbrock23")
+    \end{minted}
+
+    \onslide<6->
+    \begin{tikzpicture}[remember picture, overlay]
+      \includegraphics[scale=0.50]{ivp_py_vdp_eq}
+    \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+\section{What about performance?}
+
+\begin{frame}{Performance study}
+  We solve a 2D Gray--Scott reaction-diffusion system\footnote{Pearson, J.\ E.
+    \emph{Complex Patterns in a Simple System}, 1993, doi:
+    \href{https://doi.org/10.1126/science.261.5118.189}{%
+      10.1126/science.261.5118.189}}:
+  \begin{align*}\label{eq:gs-system}
+    \begin{split}
+      \frac{\partial u}{\partial t} &= d_u \nabla^2 u - u v^2 + F (1 - u), \\
+      \frac{\partial v}{\partial t} &= d_v \nabla^2 v + u v^2 - (F + k) v
+    \end{split}
+  \end{align*}
+  with periodic boundary conditions on the domain $[-2.5; 2.5]^2$ with initial
+  condition given by \(u = 1\), \(v = 0\) everywhere in the domain, except
+  a square of \(40 \times 40\) grid points  centered in the center of the domain,
+  which is set to \(u = 0.5 + \mathrm{Uniform}(0; 0.1)\)
+  and \(v = 0.25 + \mathrm{Uniform}(0; 0.1)\).
+
+  Final time 100 with time step 1.
+  Parameters \(F = 0.055\), \(k = 0.062\), \(d_u = \num{2e-5}\),
+  \(d_v = \num{e-5}\).
+\end{frame}
+
+\begin{frame}{Performance study, cont.}
+  \begin{minipage}{0.48\textwidth}
+    Resolution \(N \in \{64, 128, 256, 512\}\)\\
+    For each \(N\) three runs\\
+    User code is in Python\\
+    Implementation code is in C (Sundials CVODE\footnotemark)
+
+    \vspace{6em}
+    Normalized runtime of the Sundials CVODE solver via Open Interfaces
+    vs direct bindings using the~\texttt{scikit.odes}\footnotemark\
+    software package.
+  \end{minipage}\hfill
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[scale=0.45]{ivp_cvode_gs_performance}
+  \end{minipage}
+  \footnotetext{%
+    Hindmarsh, A.\ C. et al. \emph{SUNDIALS: Suite of Nonlinear and Differential/Algebraic Equation Solvers}, 2005%, doi:
+    %\href{https://doi.org/10.1145/1089014.1089020}{10.1145/1089014.1089020}
+  }
+  \footnotetext{%
+    Benny, P.\ K., et al. \emph{bmcage/odes: Release 2.7.0}, 2023, doi:
+    \href{https://doi.org/10.5281/ZENODO.7533040}{10.5281/ZENODO.7533040}
+  }
+\end{frame}
+
+\begin{frame}{MaRDI}
+  \begin{itemize}
+    \item This project is part of MaRDI---Mathematical Research Data Initiative.
+    \item The overall goal of MaRDI is to improve infrastructure related
+          to mathematics and other scientific dispiplines
+    \item Points of interests are data formats, FAIRness of data
+          (Findable, Accessible, Interoperable, Reproducable), computational
+          workflows
+  \end{itemize}
+  \vspace{-2cm}
+  \includegraphics[scale=0.7]{MaRDI_Logo_S_5_cmyk}
+\end{frame}
+
+\begin{frame}[standout]{}
+  \centering
+  \huge{Thank you!}
+\end{frame}
+
+\end{document}
