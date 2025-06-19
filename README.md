@@ -8,11 +8,12 @@ This repository contains slides about my work on the
 
 # Changes
 
-- 2023-10-17: MaRDI Biweekly meeting
-- 2023-11-09: University of Muenster Postdoc Colloqium
-- 2024-06-11: ESCO'2024, Pilsen, Chech Republic
-- 2024-07-03: PDESoft'2024, Cambridge, UK
+- 2025-04-10: GAMM 95th Annual Meeting, Poznan, Poland
 - 2024-10-16: 2nd Workshop on Scientific Computing, Magdeburg, Germany
+- 2024-07-03: PDESoft'2024, Cambridge, UK
+- 2024-06-11: ESCO'2024, Pilsen, Chech Republic
+- 2023-11-09: University of Muenster Postdoc Colloqium
+- 2023-10-17: MaRDI Biweekly meeting
 
 ## License
 
