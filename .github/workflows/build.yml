@@ -33,4 +33,8 @@ jobs:
 
     - name: Compile LaTeX Beamer with latexmk
       run: |
+        cd tikz
+        pdflatex oif_bindings.tex
+        pdflatex pairwise_bindings.tex
+        cd ..
         latexmk -pdf -interaction=nonstopmode -halt-on-error talk*.tex
