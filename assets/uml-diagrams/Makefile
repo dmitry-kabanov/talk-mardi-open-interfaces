@@ -1,0 +1,2 @@
+%.pdf : %.plantuml
+	plantuml -tsvg $<
