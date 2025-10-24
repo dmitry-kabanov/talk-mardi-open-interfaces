@@ -73,11 +73,11 @@
 % -----------------------------------------------------------------------------
 % Title info
 \title{%
-  Improving Interoperability in Scientific Computing\\
-  via MaRDI Open Interfaces}
+  The MaRDI Open Interfaces software project\\to improve interoperability in
+  Scientific Computing}
 \author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Mathematics Münster, University of Münster, Germany}
-\date{{\large GAMM 95th Annual Meeting, Poznań, Poland}\\{7--11 April 2025}}
+\date{Oberseminar Numerik, 29 October 2025}
 \titlegraphic{\vspace{0.8\textheight}\hspace{0.38\textwidth}
   \includegraphics[width=0.618\textwidth]{logos/logos}
 }
@@ -119,9 +119,9 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}{Another solution}
+\begin{frame}[label=current]{Another solution}
   \begin{itemize}
-    \item To solve both of this problems:
+    \item To solve both issues:
           \begin{itemize}
             \item provide automatic bindings between different languages
             \item provide generic interfaces for typical numerical problems
@@ -165,10 +165,20 @@
   \includegraphics[scale=0.09]{arch}
 \end{frame}
 
-\begin{frame}{Currently supported languages, data types, problems}
+\begin{frame}{Architecture of MaRDI Open Interfaces}
+  \centering
+  \includegraphics[scale=0.7]{impl_1_load}
+\end{frame}
+
+\begin{frame}{Architecture of MaRDI Open Interfaces}
+  \centering
+  \includegraphics[scale=0.6]{impl_2_call}
+\end{frame}
+
+\begin{frame}{Currently supported languages, data types}
   \begin{itemize}
     \onslide<1->
-    \item Languages: C, Python, Julia (partially)
+    \item Languages: C, Julia, and Python
     \onslide<2->
     \item Data types:
           \begin{itemize}
@@ -183,7 +193,7 @@
     \onslide<3->
     % \item Interfaces:
     %       \begin{itemize}
-    %         \item (Toy problem) quadratic equations: $ax^2 + bx + c = 0$
+    %         \item (Toy test problem) quadratic equations: $ax^2 + bx + c = 0$
     %         % \item systems of linear algebraic equations: $Ax = b$
     %         \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
     %       \end{itemize}
@@ -196,8 +206,9 @@
 \end{frame}
 
 
-\begin{frame}{Support for C}
-  \small For C, special data structures are developed to ensure consistent with Python/Julia interfaces:
+\begin{frame}{Special data structures for C}
+  \small Package provides special data structures in C to ensure consistency
+  with Julia and Python interfaces:
   \begin{itemize}
     \item \texttt{OIFArrayF64} packs array data along with shape\\
           \texttt{OIFArrayF64 *oif\_create\_array\_f64(int nd, intptr\_t *dimensions)}\\
