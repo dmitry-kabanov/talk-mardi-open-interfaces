@@ -160,22 +160,47 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}{Architecture of MaRDI Open Interfaces}
+\section{Software details}
+
+\begin{frame}{Software details: Components}
   \centering
-  \includegraphics[scale=0.09]{arch}
+  % \includegraphics[scale=0.09]{arch}
+  \begin{minipage}{0.48\textwidth}
+    \centering \textbf{User-facing components}
+  \begin{itemize}
+    \item \emph{Gateway} - a language-specific common interface
+          to a particular numerical problem
+    \item \emph{Converter} - a language-specific converter of data
+          to intermediate C representation
+    \item \emph{Dispatch} - a C library that takes the data in C representation,
+          loads a Bridge and asks it to load an implementation and stores it
+          in a table
+  \end{itemize}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \centering \textbf{Implementation-facing components}
+    \begin{itemize}
+      \item \emph{Bridge} - a language-specific C library that converts data
+            to native types and invokes implementation functions
+      \item \emph{Interface} - a virtual component that has, in principle,
+            the same interface as a \emph{Gateway}
+      \item \emph{Adapter} - an adapter from implementation to the \emph{Interface}
+      \item \emph{Implementation} - actual solver, outside of system's boundary
+    \end{itemize}
+  \end{minipage}
 \end{frame}
 
-\begin{frame}{Architecture of MaRDI Open Interfaces}
+\begin{frame}{Software details: Loading an implementation}
   \centering
   \includegraphics[scale=0.7]{uml-diagrams/impl_1_load}
 \end{frame}
 
-\begin{frame}{Architecture of MaRDI Open Interfaces}
+\begin{frame}{Software details: Calling an implementation}
   \centering
   \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
 \end{frame}
 
-\begin{frame}{Currently supported languages, data types}
+\begin{frame}{Software details: Currently supported languages, data types}
   \begin{itemize}
     \onslide<1->
     \item Languages: C, Julia, and Python
@@ -206,7 +231,7 @@
 \end{frame}
 
 
-\begin{frame}{Special data structures for C}
+\begin{frame}{Software details: Special data structures for C}
   \small Package provides special data structures in C to ensure consistency
   with Julia and Python interfaces:
   \begin{itemize}
