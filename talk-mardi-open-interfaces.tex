@@ -1,4 +1,5 @@
 \documentclass[10pt, aspectratio=169, progressbar=frametitle]{beamer}
+\usepackage{iftex}
 \usetheme[numbering=fraction]{metropolis}
 % \usetheme[language=en]{UniMS}
 
@@ -17,21 +18,20 @@
 }
 }}
 
-\newcommand{\myheader}{%
-\headerWithBreaks{0.2em}{\#} &
-\headerWithBreaks{3em}{User\\language} &
-\headerWithBreaks{1.5em}{OIF/\\RAW} &
-\headerWithBreaks{3em}{Imple-\\mentation} &
-                                \multicolumn{3}{c}{$N$} \\
-                                \cmidrule(lr){5-7}
-}
-
 % -----------------------------------------------------------------------------
 % Fonts
+\ifluatex
+  \usepackage{unicode-math}
+  \usepackage{fourier-otf}
+  \setsansfont[BoldFont={Fira Sans SemiBold}]{Fira Sans Book}
+  \setmonofont{Fira Code}
+\else
 \usepackage[defaultsans,scale=1.0]{lato}
 \usepackage{fourier}
 \usepackage[scale=1.05]{inconsolata}
 \usefonttheme[onlymath]{serif}
+\fi
+
 
 % -----------------------------------------------------------------------------
 % Typography
@@ -167,12 +167,12 @@
 
 \begin{frame}{Architecture of MaRDI Open Interfaces}
   \centering
-  \includegraphics[scale=0.7]{impl_1_load}
+  \includegraphics[scale=0.7]{uml-diagrams/impl_1_load}
 \end{frame}
 
 \begin{frame}{Architecture of MaRDI Open Interfaces}
   \centering
-  \includegraphics[scale=0.6]{impl_2_call}
+  \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
 \end{frame}
 
 \begin{frame}{Currently supported languages, data types}
@@ -290,7 +290,7 @@
     \vspace{1.7em}
     \onslide<2->
     User code in Python:
-    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
+    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
       p = VdPEquationProblem(
         mu=1000,
         tfinal=3000
@@ -418,9 +418,9 @@
     \toprule
     Implementation language & Runtime, seconds \\
     \midrule
-    C (Clang)               & 0.115 ± 0.008    \\
-    Julia                   & 0.122 ± 0.016    \\
-    Python (Numba)          & 0.116 ± 0.001    \\
+    C (Clang)               & 0.115 \(\pm\) 0.008    \\
+    Julia                   & 0.122 \(\pm\) 0.016    \\
+    Python (Numba)          & 0.116 \(\pm\) 0.001    \\
     \bottomrule
   \end{tabular}
 \end{frame}
@@ -428,32 +428,40 @@
 \begin{frame}
   \frametitle{Performance study: results}
 
+\newcommand{\myheader}{%
+\headerWithBreaks{0.2em}{\#} &
+\headerWithBreaks{3em}{User\\language} &
+\headerWithBreaks{1.5em}{OIF/\\RAW} &
+\headerWithBreaks{3em}{Imple-\\mentation} &
+                                \multicolumn{2}{c}{$N$} \\
+                                \cmidrule(lr){5-6}
+}
   \vspace{1em}
   \centering
-  \begin{tabular}{l l l l c c c}
+  \begin{tabular}{l l l l c c}
     \toprule
-    \myheader                                                                                        \\
-                      &           &     &          & 1600          & 6400          & 25\,600    \\
+    \myheader                                                                                    \\
+                       &           &     &          & 6400                & 25\,600              \\
     \midrule
-    \multirow{2}{*}{1} & C        & OIF & DOPRI5-C & 0.068 ± 0.001 & 1.011 ± 0.017 & 21.006 ± 0.100 \\
-                      & C         & RAW & DOPRI5-C & 0.069 ± 0.001 & 0.951 ± 0.012 & 20.699 ± 0.121 \\
+    \multirow{2}{*}{1} & C         & OIF & DOPRI5-C & 1.011 \(\pm\) 0.017 & 21.006 \(\pm\) 0.100 \\
+                       & C         & RAW & DOPRI5-C & 0.951 \(\pm\) 0.012 & 20.699 \(\pm\) 0.121 \\
     \addlinespace
     \addlinespace
-    \multirow{3}{*}{2} & C        & OIF & DP5      & 0.082 ± 0.000 & 0.847 ± 0.003 & 20.700 ± 0.049 \\
-                      & Julia (C) & RAW & DP5      & 0.056 ± 0.002 & 0.820 ± 0.008 & 20.364 ± 0.073 \\
-                      & Julia     & RAW & DP5      & 0.067 ± 0.009 & 0.868 ± 0.004 & 21.058 ± 0.067 \\
+    \multirow{3}{*}{2} & C         & OIF & DP5      & 0.847 \(\pm\) 0.003 & 20.700 \(\pm\) 0.049 \\
+                       & Julia (C) & RAW & DP5      & 0.820 \(\pm\) 0.008 & 20.364 \(\pm\) 0.073 \\
+                       & Julia     & RAW & DP5      & 0.868 \(\pm\) 0.004 & 21.058 \(\pm\) 0.067 \\
     \addlinespace
     \addlinespace
-    \multirow{3}{*}{3} & Python   & RAW & DOPRI5   & 0.113 ± 0.000 & 1.573 ± 0.010 & 30.829 ± 0.121 \\
-                      & Python    & OIF & DOPRI5   & 0.122 ± 0.009 & 1.575 ± 0.005 & 30.944 ± 0.122 \\
-                      & Python    & OIF & DP5      & 0.196 ± 0.003 & 1.466 ± 0.005 & 28.147 ± 0.040 \\
+    \multirow{3}{*}{3} & Python    & RAW & DOPRI5   & 1.573 \(\pm\) 0.010 & 30.829 \(\pm\) 0.121 \\
+                       & Python    & OIF & DOPRI5   & 1.575 \(\pm\) 0.005 & 30.944 \(\pm\) 0.122 \\
+                       & Python    & OIF & DP5      & 1.466 \(\pm\) 0.005 & 28.147 \(\pm\) 0.040 \\
     \bottomrule
   \end{tabular}
 \end{frame}
 
 % \input{slides/mardi.tex}
 
-\begin{frame}
+\begin{frame}[standout]
   \centering
   \vspace{9em}
   \huge{Thank you!}
@@ -463,5 +471,4 @@
   \vspace{1em}
   \includegraphics[width=0.618\linewidth]{logos/logos}
 \end{frame}
-
 \end{document}
