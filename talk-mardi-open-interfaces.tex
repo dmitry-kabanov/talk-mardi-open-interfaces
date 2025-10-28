@@ -207,7 +207,7 @@
   \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
 \end{frame}
 
-\begin{frame}{Software details: Currently supported languages, data types}
+\begin{frame}{Software details: Currently supported languages, data types, function calls}
   \begin{itemize}
     \onslide<1->
     \item Languages: C, Julia, and Python
@@ -229,12 +229,10 @@
     %         % \item systems of linear algebraic equations: $Ax = b$
     %         \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
     %       \end{itemize}
-    \item All data are passed via pointers---no copies of large arrays
     \item On implementation side function are invoked via
           the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
           in C and via C API in embedded Python/Julia
   \end{itemize}
-
 \end{frame}
 
 
@@ -251,6 +249,14 @@
           \texttt{void oif\_config\_dict\_add\_double(OIFConfigDict *dict, const char *key, double value);}\\
           \texttt{void oif\_config\_dict\_add\_str(OIFConfigDict *dict, const char *key, const char *value);}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Software details: Passing arrays does not incur memory copies}
+  \centering
+  \includegraphics[scale=0.1]{arrays}
+
+  Arrays are essentially just ``repacked'' for a particular language
+  with metadata without copying array elements, which costs $\mathcal O(1)$.
 \end{frame}
 
 \section{Examples with the interface for initial-value problems for ODEs (time integration)}
