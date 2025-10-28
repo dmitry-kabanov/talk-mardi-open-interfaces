@@ -1,4 +1,7 @@
 @startuml
+
+!include style.plantuml
+
 participant User as User
 participant "Gateway" as GW
 participant "Converter" as converter
@@ -8,7 +11,9 @@ participant "Adapter + Impl" as adapter
 
 User -> GW : compute(a, b)
 GW -> converter: call_impl(\n  implh,\n  "compute",\n  oif_args)
+note bottom: oif_args = (a, b)
 converter -> libdispatch : call_interface_impl(\n  implh,\n  "compute",\n  oif_args)
 libdispatch -> langdispatch : call_impl(\n  implh,\n  "compute",\n  oif_args)
 langdispatch -> adapter : compute(arg1, arg2, ...)
+
 @enduml

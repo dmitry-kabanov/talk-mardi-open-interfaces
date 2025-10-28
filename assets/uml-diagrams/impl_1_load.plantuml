@@ -1,0 +1,20 @@
+@startuml
+
+!include style.plantuml
+
+participant "User" as user
+participant "Gateway" as gateway
+participant "Converter" as converter
+participant "Dispatch" as libdispatch
+participant "Bridge" as bridge
+participant "Adapter" as adapter
+
+create gateway
+user -> gateway : new(\n  impl_name)
+gateway -> converter: load_impl(\n  interface,\n  impl_name)
+converter -> libdispatch : load_impl(\n  interface,\n  impl_name)
+note right : find impl_details\nfrom impl_name
+libdispatch -> bridge : load_interface_impl(\n  impl_details)
+create adapter
+bridge -> adapter : new
+@enduml

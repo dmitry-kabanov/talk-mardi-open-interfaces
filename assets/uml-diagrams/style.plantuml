@@ -1,0 +1,10 @@
+@startuml
+
+' Parameters for Sequence Diagrams
+skinparam NoteBackgroundColor #e3a380
+
+skinparam ParticipantBackgroundColor #005eaa
+skinparam ParticipantBorderColor #000000
+skinparam ParticipantFontColor #ffffff
+
+@enduml
