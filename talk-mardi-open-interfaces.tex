@@ -341,62 +341,103 @@ int rhs(
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Example 2: Implicit solvers}
-  \begin{columns}
+\begin{frame}[fragile]{Example 2: Solving a stiff system}
+  \begin{columns}[t]
   \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
     Van der Pol equation:
     \[
-      \odv[order=2]{x}{t} - \mu
+      \frac{\mathrm{d} x}{\mathrm{d} t} - \mu
       \left(
         1 - x^{2}
-      \right) \odv{x}{t} + x = 0
+      \right) \frac{\mathrm{d} x}{\mathrm{d} t} + x = 0
     \]
-    with \(\mu = 1000\) (stiff).\par
+    \(x(0) = 2\), \(t \in [0; 3000]\) and \(\mu = 1000\).\par
 
-    \vspace{1.7em}
-    \onslide<2->
+    \onslide<2>
+    \vspace{3em}
+    Transformed to a first-order system:
+    \begin{align*}
+      \frac{\mathrm{d} y_{0}}{\mathrm{d} t} &= y_{1}\\
+      \frac{\mathrm{d} y_{1}}{\mathrm{d} t} &= \mu (1 - y_{0}^{2}) y_{1} - y_{0} \\
+      y_{0}(0) &= 2, \quad y_{1}(0) = 0
+    \end{align*}
+
+    \vspace{5em}
+    \onslide<3->
+    \begin{tikzpicture}[overlay, remember picture]
+      \node at (3, 4) {\includegraphics[width=0.99\textwidth]{ivp-vdp}};
+    \end{tikzpicture}
+  \column{0.6\textwidth - 2\tabcolsep}%
+    \onslide<4->
     User code in Python:
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
-      p = VdPEquationProblem(
-        mu=1000,
-        tfinal=3000
-      )
-      s = IVP("scipy_ode")
-      s.set_initial_value(p.y0, p.t0)
-      s.set_rhs_fn(p.compute_rhs)
-    \end{minted}
-  \column{0.6\textwidth - 2\tabcolsep}
-    \onslide<3-5>
-    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
-      s.set_integrator("dopri5", {"nsteps": 100_000})
-    \end{minted}
-    Solving with \texttt{scipy.ode.dopri5} fails:\\
-    \texttt{UserWarning: dopri5: problem is probably stiff}
+    class VdPEquationProblem:
+      ...
+      def compute_rhs(self, __, y, ydot, ___):
+          ydot[0] = y[1]
+          ydot[1] = self.mu*(1-y[0]**2)*y[1]-y[0]
+          return 0
 
-    \vspace{1.7em}
-    \onslide<4-5>
-    Switching to \texttt{scipy.ode.vode} with BDF succeeds:
-    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
-      s.set_integrator("vode", {"nsteps": 40_000})
-    \end{minted}
+      problem = VdPEquationProblem(mu=1000, T=3000)
 
-    \vspace{1.7em}
-    \onslide<5-5>
-    More efficient solution using \texttt{OrdinaryDiffEq.jl}:
-    \begin{minted}[autogobble, beameroverlays, escapeinside=||]{C}
-      s = IVP("jl_diffeq")
-      s.set_integrator("Rosenbrock23")
+      s = IVP(<impl-name>)
+      # Optional step
+      s.set_integrator(<name>, <options>)
+      s.set_initial_value(problem.y0, problem.t0)
+      s.set_rhs_fn(problem.compute_rhs)
     \end{minted}
-
-    \onslide<6->
-    \begin{tikzpicture}[remember picture, overlay]
-      % \includegraphics[width=0.9\textwidth]{ivp_py_vdp_eq}
-      \includegraphics[width=0.9\textwidth]{ivp-vdp}
-    \end{tikzpicture}
   \end{columns}
 \end{frame}
 
-\section{What about performance?}
+\begin{frame}[fragile]{Example 2: Solving a stiff system}
+    \onslide<1->
+    \begin{columns}
+    \column{\dimexpr 0.6\textwidth - 2\tabcolsep}
+      \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
+        s = IVP("scipy_ode")
+        s.set_integrator("dopri5", {"nsteps": 100_000})
+      \end{minted}
+    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+      \onslide<2->{%
+      \textbf{\color{CRedD}Fail}\\
+      \texttt{UserWarning: dopri5: problem is probably stiff}
+      }
+    \end{columns}
+
+    \vspace{3em}
+    \onslide<3->
+    \begin{columns}
+      \column{0.6\textwidth - 2\tabcolsep}
+        \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
+          s = IVP("scipy_ode")
+          s.set_integrator("vode", {"nsteps": 40_000})
+        \end{minted}
+
+      \column{0.4\textwidth - 2\tabcolsep}
+        \onslide<4->{%
+        \textbf{\color{CGreenD}Success}\\
+        However, time-to-solution is about 10 seconds.
+        }
+    \end{columns}
+
+    \vspace{3em}
+    \onslide<5->
+    \begin{columns}
+      \column{0.6\textwidth - 2\tabcolsep}
+        \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
+          s = IVP("jl_diffeq")
+          s.set_integrator("Rosenbrock23")
+          s.set_initial_value(problem.y0, problem.t0)
+          s.set_rhs_fn(problem.compute_rhs)
+        \end{minted}
+      \column{0.4\textwidth - 2\tabcolsep}
+        \onslide<6->{%
+          \textbf{\color{CGreenD}Success}\\
+          More efficient solution using \texttt{OrdinaryDiffEq.jl}
+        }
+    \end{columns}
+\end{frame}
+
 
 % \begin{frame}{Performance study}
 %   We solve a 2D Gray--Scott reaction-diffusion system\footnote{Pearson, J.\ E.
