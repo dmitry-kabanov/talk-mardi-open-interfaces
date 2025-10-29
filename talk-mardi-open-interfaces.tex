@@ -294,23 +294,51 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}[fragile]{Example call from C}
+\begin{frame}[fragile]{Example 1: Exponential decay from C}
+  \begin{columns}
+    \column{0.3\textwidth}
+  \begin{align*}
+    \frac{\mathrm d y}{\mathrm d t} &= -y\\
+    y(0) &= 1
+  \end{align*}
+  \vspace{-2em}
+  \onslide<2>
   \begin{minted}[beameroverlays, escapeinside=||]{C}
-    char *|\textbf<2>{impl\_name}| = "scipy_ode";
-    OIFArrayF64 *|\textbf<4>{y0}| = oif_create_array_f64(1, (intptr_t[1]){N});
-    OIFArrayF64 *y = oif_create_array_f64(1, (intptr_t[1]){N});
-    OIFArrayF64 *grid = oif_create_array_f64(1, (intptr_t[1]){N});
+int rhs(
+  double t,
+  OIFArrayF64 *y,
+  OIFArrayF64 *rhs_out,
+  void *user_data)
+{
+  for (
+    int i = 0;
+    i < y->dimensions[0]; ++i) {
+      rhs_out->data[i] = -y->data[i];
+  }
+  return 0;
+}
+\end{minted}
+  \column{0.7\textwidth}
+  \onslide<3->
+  \begin{minted}[beameroverlays, escapeinside=||]{C}
+    char *|\textbf<4>{impl\_name}| = <implementation-string>;
+    OIFArrayF64 *|\textbf<6>{y0}| = oif_create_array_f64(
+      1, (intptr_t[1]){N});
+    |\textbf<6>{y0}|->data[0] = 1.0;
+    OIFArrayF64 *|\textbf<8>{y}| = oif_create_array_f64(
+      1, (intptr_t[1]){N});
 
-    ImplHandle |\textbf<3>{implh}| = oif_init_impl("ivp", |\textbf<2>{impl\_name}|, 1, 0);
-    status = oif_ivp_set_initial_value(|\textbf<3>{implh}|, |\textbf<4>{y0}|, |\textbf<4>{t0}|);
-    status = oif_ivp_set_rhs_fn(|\textbf<3>{implh}|, |\textbf<5>{rhs}|);
-    status = oif_ivp_set_user_data(|\textbf<3>{implh}|, |\textbf<6>{&dx}|);
+    ImplHandle |\textbf<5>{implh}| = oif_init_impl(
+      "ivp", |\textbf<4>{impl\_name}|, 1, 0);
+    status = oif_ivp_set_initial_value(|\textbf<5>{implh}|, |\textbf<6>{\{y0\}}|, |\textbf<6>{0.0}|);
+    status = oif_ivp_set_rhs_fn(|\textbf<5>{implh}|, |\textbf<7>{rhs}|);
 
     for (int i = 0; i < n_time_steps; ++i) {
         t = t0 + (i + 1) * dt;
-        status = oif_ivp_integrate(|\textbf<3>{implh}|, t, y);
+        status = oif_ivp_integrate(|\textbf<5>{implh}|, t, |\textbf<8>{y}|);
     }
   \end{minted}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Example 2: Implicit solvers}
