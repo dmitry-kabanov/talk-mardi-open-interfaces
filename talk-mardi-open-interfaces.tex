@@ -127,22 +127,32 @@
 \end{frame}
 
 \begin{frame}[label=current]{Another solution}
-  \begin{itemize}
-    \item To solve both issues:
-          \begin{itemize}
-            \item provide automatic bindings between different languages
-            \item provide generic interfaces for typical numerical problems
-            \item Examples of generic interfaces are:
-                  \begin{itemize}
-                    \item \texttt{PyMOR} for model-order reduction simulations
-                    \item  \texttt{scipy.integrate} in Python
-                          and \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
-                  \end{itemize}
-          \end{itemize}
-    \item However, the above packages concentrate on solving only
-          the problem of different interfaces, not to the problem
-          of the multiple languages
-  \end{itemize}
+  \begin{columns}[t]
+    \column{0.5\textwidth - 2\tabcolsep}
+    To solve both issues:
+    \begin{itemize}
+      \item \textbf{provide generic interfaces} for typical numerical problems,
+            employing the software principle
+            \emph{``program against an interface, not an implementation''}
+      \item \textbf{automate data marshalling} between languages
+            to avoid writing manual/semi-manual bindings
+            (using tools like Cython, etc.)
+    \end{itemize}
+
+    \column{0.5\textwidth - 2\tabcolsep}
+    \onslide<2->
+    Examples of generic interfaces are:
+    \begin{itemize}
+      \item \texttt{BLAS} for basic linear algebra
+      \item \texttt{scipy.optimize} in Python for optimization algorithms
+      \item \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
+      \item \texttt{PyMOR} for model-order reduction simulations
+    \end{itemize}
+
+    However, the above packages concentrate on solving only
+    the problem of different interfaces, not on the problem
+    of data marshalling.
+  \end{columns}
 \end{frame}
 
 \begin{frame}{MaRDI Open Interfaces (TA2 Measure 2)}
