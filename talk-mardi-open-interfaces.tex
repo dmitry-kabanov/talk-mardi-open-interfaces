@@ -76,6 +76,15 @@
 \begin{document}
 \maketitle
 
+\begin{frame}
+  \frametitle{Outline}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Motivation}
+
 \begin{frame}{Typical situation in scientific computing}
   \begin{itemize}
     \item Often computational scientists need
@@ -109,7 +118,7 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}[label=current]{Another solution}
+\begin{frame}{Another solution}
   \begin{columns}[t]
     \column{0.5\textwidth - 2\tabcolsep}
     To solve both issues:
@@ -160,6 +169,7 @@
   \end{minipage}
 \end{frame}
 
+% -----------------------------------------------------------------------------
 \section{Software details}
 
 \begin{frame}{Software details: Components}
@@ -178,6 +188,7 @@
   \end{itemize}
   \end{minipage}
   \begin{minipage}{0.48\textwidth}
+    \onslide<2->
     \centering \textbf{Implementation-facing components}
     \begin{itemize}
       \item \emph{Bridge} - a language-specific C library that converts data
@@ -216,12 +227,6 @@
             \item \texttt{OIF\_CONFIG\_DICT} - option-value pairs
           \end{itemize}
     \onslide<3->
-    % \item Interfaces:
-    %       \begin{itemize}
-    %         \item (Toy test problem) quadratic equations: $ax^2 + bx + c = 0$
-    %         % \item systems of linear algebraic equations: $Ax = b$
-    %         \item initial-value problems for ODEs \(y'(t) = f(t, y), \  y(t_0) = y_0\)
-    %       \end{itemize}
     \item On implementation side function are invoked via
           the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
           in C and via C API in embedded Python/Julia
@@ -229,19 +234,25 @@
 \end{frame}
 
 
-\begin{frame}{Software details: Special data structures for C}
+\begin{frame}[fragile]{Software details: Special data structures for C}
   \small Package provides special data structures in C to ensure consistency
   with Julia and Python interfaces:
-  \begin{itemize}
-    \item \texttt{OIFArrayF64} packs array data along with shape\\
-          \texttt{OIFArrayF64 *oif\_create\_array\_f64(int nd, intptr\_t *dimensions)}\\
-          \texttt{OIFArrayF64 *oif\_init\_array\_f64\_from\_data(nd, dimensions, const double *data)
-}
-      \item<2-> \texttt{OIFConfigDict} packs key-value pairs together\\
-          \texttt{void oif\_config\_dict\_add\_int(OIFConfigDict *dict, const char *key, int value);}\\
-          \texttt{void oif\_config\_dict\_add\_double(OIFConfigDict *dict, const char *key, double value);}\\
-          \texttt{void oif\_config\_dict\_add\_str(OIFConfigDict *dict, const char *key, const char *value);}
-  \end{itemize}
+
+  \vspace{2em}
+  \texttt{OIFArrayF64} packs array data along with their shape:
+  \begin{minted}{C}
+    OIFArrayF64 *oif_create_array_f64(int nd, intptr_t *dimensions);
+    OIFArrayF64 *oif_init_array_f64_from_data(nd, dimensions, const double *data);
+  \end{minted}
+
+  \onslide<2->
+  \vspace{2em}
+  \texttt{OIFConfigDict} packs key-value pairs together:
+  \begin{minted}{C}
+    void oif_config_dict_add_int(OIFConfigDict *dict, const char *key, int value);
+    void oif_config_dict_add_double(OIFConfigDict *dict, const char *key, double value);
+    void oif_config_dict_add_str(OIFConfigDict *dict, const char *key, const char *value);
+  \end{minted}
 \end{frame}
 
 \begin{frame}{Software details: Passing arrays does not incur memory copies}
@@ -252,6 +263,7 @@
   with metadata without copying array elements, which costs $\mathcal O(1)$.
 \end{frame}
 
+% -----------------------------------------------------------------------------
 \section{Examples with the interface for initial-value problems for ODEs (time integration)}
 
 \begin{frame}[fragile]{Interface for initial-value problems for ODEs}
@@ -431,6 +443,7 @@ int rhs(
     \end{columns}
 \end{frame}
 
+% -----------------------------------------------------------------------------
 \section{Runtime performance}
 
 % \begin{frame}{Performance study}
@@ -562,6 +575,7 @@ int rhs(
 % \input{slides/mardi.tex}
 
 \begin{frame}
+  \frametitle{Software availability}
   \begin{minipage}{0.618\textwidth}
     \begin{itemize}
       \item Open source, BSD-2-Clause License
