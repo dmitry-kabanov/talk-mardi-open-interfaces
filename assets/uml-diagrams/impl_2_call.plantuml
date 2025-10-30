@@ -6,14 +6,14 @@ participant User as User
 participant "Gateway" as GW
 participant "Converter" as converter
 participant "Dispatch" as libdispatch
-participant "LangDispatch" as langdispatch
+participant "Bridge" as bridge
 participant "Adapter + Impl" as adapter
 
 User -> GW : compute(a, b)
 GW -> converter: call_impl(\n  implh,\n  "compute",\n  oif_args)
 note bottom: oif_args = (a, b)
 converter -> libdispatch : call_interface_impl(\n  implh,\n  "compute",\n  oif_args)
-libdispatch -> langdispatch : call_impl(\n  implh,\n  "compute",\n  oif_args)
-langdispatch -> adapter : compute(arg1, arg2, ...)
+libdispatch -> bridge : call_impl(\n  implh,\n  "compute",\n  oif_args)
+bridge -> adapter : compute(arg1, arg2, ...)
 
 @enduml
