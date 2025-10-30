@@ -1,22 +1,27 @@
-\documentclass[10pt, aspectratio=169, progressbar=frametitle]{beamer}
-\usepackage{iftex}
-\usetheme[numbering=none]{metropolis}
+% *use this when you do not use LatexMk* !TeX program = lualatex
+\documentclass[
+  10pt,
+  aspectratio=169,
+  english,
+]{beamer}
+\usetheme[
+  numbering=none,    % Slide numbers: {none, *counter*, fraction}
+  progressbar=none,  % {*none*, head, frametitle, foot}
+]{metropolis}
 % \usetheme[language=en]{UniMS}
 
-\setbeamertemplate{headline}{}
-
+% Use this command and \begin{frame}[label=current] syntax
+% to work only on a particular slide.
 % \includeonlyframes{current}
 
-\newcommand{\methodheader}{\multicolumn{1}{c}{\multirow{2}{*}{Method}}}
+% If you want to have backup slides,
+% enable this package
+% and put the \appendix command before those slides.
+% The Metropolis theme will turn off slide numbering
+% and progress bars for slides in the appendix.
+% \usepackage{appendixnumberbeamer}
 
-% Add table header (two-lines tall) with line breaks.
-% #1 desired width (use em's please)
-% #2 header's text (with line breaks via backslashes)
-\newcommand{\headerWithBreaks}[2]{{%
-\multirow{2}{*}{%
-  \begin{minipage}[t]{#1}{#2}\end{minipage}
-}
-}}
+\usepackage{iftex}
 
 % -----------------------------------------------------------------------------
 % Fonts
@@ -26,63 +31,41 @@
   \setsansfont[BoldFont={Fira Sans SemiBold}]{Fira Sans Book}
   \setmonofont{Fira Code}
 \else
-\usepackage[defaultsans,scale=1.0]{lato}
-\usepackage{fourier}
-\usepackage[scale=1.05]{inconsolata}
-\usefonttheme[onlymath]{serif}
+  \usepackage[defaultsans,scale=1.0]{lato}
+  \usepackage{fourier}
+  \usepackage[scale=1.05]{inconsolata}
+  \usefonttheme[onlymath]{serif}
 \fi
-
 
 % -----------------------------------------------------------------------------
 % Typography
-\usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{minted}
 \usepackage{multirow}
+\usepackage{siunitx}
 
 % -----------------------------------------------------------------------------
 % Graphics
 \usepackage{pgfplots}
 \usepackage{tikz}
-\usepackage[beamer,customcolors]{hf-tikz}
+\usepackage[beamer, customcolors]{hf-tikz}
 \usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric}
 \input{tikz/styles.tex}
 \graphicspath{{./assets}{./tikz}}
 
 % -----------------------------------------------------------------------------
-% Define useful colors.
-\colorlet{black}{black!50!gray}
-\colorlet{green}{green!50!gray}
-\colorlet{blue}{blue!50!gray}
-
-\colorlet{CBlue}{blue!15}
-\colorlet{CBlueD}{blue!95!gray}
-\colorlet{CRed}{red!15}
-\colorlet{CRedD}{red!65!gray}
-\colorlet{CGreenD}{green!60!gray}
-\colorlet{COrange}{orange}
-
-\definecolor{CMaRDIBlue40}{RGB}{153, 191, 221}
-\definecolor{CMaRDIOrange100}{RGB}{208, 102, 043}
-\definecolor{CMaRDIOrange40}{RGB}{236, 194, 170}
-
-% -----------------------------------------------------------------------------
-
-\usepackage{derivative}
-\usepackage{minted}
-
-% -----------------------------------------------------------------------------
-\setbeamersize{text margin left=0.5cm, text margin right=0.5cm}
-\setbeamercolor{background canvas}{bg=white}
-\setbeamercolor{frametitle}{fg=black, bg=white}
-\setbeamercolor{title separator}{fg=CMaRDIOrange100, bg=CMaRDIOrange100}
-\setbeamercolor{progress bar in section page}{fg=CMaRDIOrange100, bg=CMaRDIOrange40}
+% Additional preamble files
+\input{preamble-colors.tex}
+\input{preamble-beamer.tex}
+\input{preamble-macros.tex}
 
 % -----------------------------------------------------------------------------
 % Title info
 \title{%
   The MaRDI Open Interfaces software project\\to improve interoperability in
   Scientific Computing}
-\author{Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger}
+\author{Dmitry I.\ Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Mathematics Münster, University of Münster, Germany}
 \date{Oberseminar Numerik, 29 October 2025}
 \titlegraphic{\vspace{0.8\textheight}\hspace{0.38\textwidth}
