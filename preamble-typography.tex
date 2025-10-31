@@ -1,0 +1,21 @@
+% -----------------------------------------------------------------------------
+% Fonts
+\ifluatex
+  \usepackage{unicode-math}
+  \usepackage{fourier-otf}
+  \setsansfont[BoldFont={Fira Sans SemiBold}]{Fira Sans Book}
+  \setmonofont{Fira Code}
+\else
+  \usepackage[defaultsans,scale=1.0]{lato}
+  \usepackage{fourier}
+  \usepackage[scale=1.05]{inconsolata}
+  \usefonttheme[onlymath]{serif}
+  \usepackage{microtype}
+\fi
+
+% -----------------------------------------------------------------------------
+% Typesetting (tables, etc.)
+\usepackage{booktabs}
+\usepackage{minted}
+\usepackage{multirow}
+\usepackage{siunitx}

@@ -1,7 +1,7 @@
-# $pdf_mode = 1;  # Use PDFLaTeX
-$pdf_mode = 4;  # Use LuaLaTex
+$pdf_mode = 1;  # Use PDFLaTeX
+# $pdf_mode = 4;  # Use LuaLaTex
 
-# This variable should be used with $pdf_mode = 1.
+# This variable is used with $pdf_mode = 1.
 $pdflatex = "pdflatex -halt-on-error -shell-escape %O %S";
 #
 # This variable is used with $pdf_mode = 4.

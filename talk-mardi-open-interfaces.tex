@@ -21,44 +21,13 @@
 % and progress bars for slides in the appendix.
 % \usepackage{appendixnumberbeamer}
 
-\usepackage{iftex}
-
-% -----------------------------------------------------------------------------
-% Fonts
-\ifluatex
-  \usepackage{unicode-math}
-  \usepackage{fourier-otf}
-  \setsansfont[BoldFont={Fira Sans SemiBold}]{Fira Sans Book}
-  \setmonofont{Fira Code}
-\else
-  \usepackage[defaultsans,scale=1.0]{lato}
-  \usepackage{fourier}
-  \usepackage[scale=1.05]{inconsolata}
-  \usefonttheme[onlymath]{serif}
-\fi
-
-% -----------------------------------------------------------------------------
-% Typography
-\usepackage{booktabs}
-\usepackage{microtype}
-\usepackage{minted}
-\usepackage{multirow}
-\usepackage{siunitx}
-
-% -----------------------------------------------------------------------------
-% Graphics
-\usepackage{pgfplots}
-\usepackage{tikz}
-\usepackage[beamer, customcolors]{hf-tikz}
-\usetikzlibrary{arrows.meta, calc, positioning, shapes.geometric}
-\input{tikz/styles.tex}
-\graphicspath{{./assets}{./tikz}}
-
 % -----------------------------------------------------------------------------
 % Additional preamble files
 \input{preamble-colors.tex}
 \input{preamble-beamer.tex}
+\input{preamble-graphics.tex}
 \input{preamble-macros.tex}
+\input{preamble-typography.tex}
 
 % -----------------------------------------------------------------------------
 % Title info

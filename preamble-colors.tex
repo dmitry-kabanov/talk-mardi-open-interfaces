@@ -11,12 +11,30 @@
 \colorlet{CGreenD}{green!60!gray}
 \colorlet{COrange}{orange}
 
-\definecolor{CMaRDIBlue40}{RGB}{153, 191, 221}
-\definecolor{CMaRDIOrange100}{RGB}{208, 102, 043}
-\definecolor{CMaRDIOrange40}{RGB}{236, 194, 170}
+% `xcolor` allows to define colors in HTML format RRGGBB (uppercase).
+\definecolor{CMaRDIBlue100}{HTML}{005EAA}
+\definecolor{CMaRDIBlue80}{HTML}{337EBB}
+\definecolor{CMaRDIBlue60}{HTML}{669ECC}
+\definecolor{CMaRDIBlue40}{HTML}{99BFDD}
+\definecolor{CMaRDIBlue20}{HTML}{CCDFEE}
 
-\setbeamercolor{alerted text}{fg=CMaRDIOrange100}
-% \setbeamercolor{background canvas}{bg=white}
+\definecolor{CMaRDIOrange100}{HTML}{D0662B}
+\definecolor{CMaRDIOrange80}{HTML}{D98555}
+\definecolor{CMaRDIOrange60}{HTML}{E3A380}
+\definecolor{CMaRDIOrange40}{HTML}{ECC2AA}
+\definecolor{CMaRDIOrange20}{HTML}{F6E0D5}
+
+\colorlet{CMardiBlack100}{black}
+\definecolor{CMaRDIBlack60}{HTML}{666666}
+\definecolor{CMaRDIBlack40}{HTML}{999999}
+\definecolor{CMaRDIBlack20}{HTML}{cccccc}
+\definecolor{CMaRDIBlack10}{HTML}{e6e6e6}
+\definecolor{CMaRDIBlack05}{HTML}{f2f2f2}
+
+\colorlet{CMaRDIWhite}{white}
+
+\setbeamercolor{alerted text}{fg=CMaRDIOrange100, bg=CMaRDIOrange20}
+\setbeamercolor{background canvas}{bg=white}
 \setbeamercolor{frametitle}{parent=normal text}
-\setbeamercolor{title separator}{fg=CMaRDIOrange100}
-\setbeamercolor{progress bar in section page}{fg=CMaRDIOrange100, bg=CMaRDIOrange40}
+\setbeamercolor{progress bar}{fg=CMaRDIOrange100}
+\setbeamercolor{progress bar in section page}{fg=CMaRDIOrange100, bg=CMaRDIBlue40}
