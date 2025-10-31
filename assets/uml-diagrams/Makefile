@@ -11,3 +11,7 @@ all : $(pdfs)
 # impl_1_load.pdf : impl_1_load.plantuml
 # 	plantuml -tsvg $< && \
 # 	inkscape --export-filename=$@ impl_1_load.svg
+
+.PHONY : clean
+clean :
+	$(RM) $(pdfs)
