@@ -8,6 +8,7 @@ This repository contains slides about my work on the
 
 # Changes
 
+- 2025-12-04: [GAMM RSE&RDM Kickoff Meeting, Braunschweig, Germany][8]
 - 2025-10-29: Oberseminar Numeric, Münster, Germany
 - 2025-04-10: GAMM 95th Annual Meeting, Poznan, Poland
 - 2024-10-16: 2nd Workshop on Scientific Computing, Magdeburg, Germany
@@ -23,3 +24,6 @@ You can use technical (LaTeX-related) things from this repository freely,
 such as code from the preamble and `.latexmkrc` file.
 
 © 2023-2025 Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger
+
+
+[8]: https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2025-12-04-gamm-rse-rdm
