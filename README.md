@@ -2,12 +2,14 @@
 
 [![Build LaTeX document using Latexmk](https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/actions/workflows/build.yml/badge.svg)](https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/actions/workflows/build.yml)
 
-This repository contains slides about my work on the
+This repository contains slides about our work on the
 [MaRDI](https://mardi4nfdi.de) subproject
-&ldquo;2.2 Open Interfaces for Scientific Computing&rdquo;.
+&ldquo;2.2 Open Interfaces for Scientific Computing&rdquo;
+at the [Mathematics Münster](https://www.uni-muenster.de/MathematicsMuenster/), Germany.
 
 # Changes
 
+- 2026-03-05: [6th Conference for Research Software Engineering in Germany deRSE26, Stuttgart, Germany][9]
 - 2025-12-04: [GAMM RSE&RDM Kickoff Meeting, Braunschweig, Germany][8]
 - 2025-10-29: Oberseminar Numeric, Münster, Germany
 - 2025-04-10: GAMM 95th Annual Meeting, Poznan, Poland
@@ -26,4 +28,5 @@ such as code from the preamble and `.latexmkrc` file.
 © 2023-2025 Dmitry I. Kabanov, Stephan Rave, Mario Ohlberger
 
 
+[9]: https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2026-03-05-derse26
 [8]: https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2025-12-04-gamm-rse-rdm
