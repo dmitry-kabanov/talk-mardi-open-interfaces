@@ -31,10 +31,10 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{MaRDI Open Interfaces for Scientific Computing}
+\title{The MaRDI Open Interfaces Software Project for Scientific Computing}
 \author{Dmitry I.\ Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Mathematics Münster, University of Münster, Germany}
-\date{Kickoff Meeting of the GAMM RSE-RDM Activity Group, 4 December 2025}
+\date{deRSE26, Stuttgart, 5 March 2026}
 \titlegraphic{\vspace{0.8\textheight}\hspace{0.38\textwidth}
   \includegraphics[width=0.618\textwidth]{logos/logos}
 }
@@ -141,31 +141,32 @@
 
 \begin{frame}{Software details: Components}
   \centering
-  % \includegraphics[scale=0.09]{arch}
-  \begin{minipage}{0.48\textwidth}
-    \centering \textbf{User-facing components}
-    \begin{itemize}
-      \item \emph{Gateway} - a language-specific common interface
-            to a particular numerical problem
-      \item \emph{Converter} - a language-specific converter of data
-            to intermediate C representation
-      \item \emph{Dispatch} - a C library that takes the data in C representation,
-            loads a Bridge and asks it to load an implementation and stores it
-            in a table
-    \end{itemize}
-  \end{minipage}
-  \begin{minipage}{0.48\textwidth}
-    \onslide<2->
-    \centering \textbf{Implementation-facing components}
-    \begin{itemize}
-      \item \emph{Bridge} - a language-specific C library that converts data
-            to native types and invokes implementation functions
-      \item \emph{Interface} - a virtual component that has, in principle,
-            the same interface as a \emph{Gateway}
-      \item \emph{Adapter} - an adapter from implementation to the \emph{Interface}
-      \item \emph{Implementation} - actual solver, outside of system's boundary
-    \end{itemize}
-  \end{minipage}
+  \vspace{-1em}
+  \includegraphics[scale=0.11]{arch}
+  % \begin{minipage}{0.48\textwidth}
+  %   \centering \textbf{User-facing components}
+  %   \begin{itemize}
+  %     \item \emph{Gateway} - a language-specific common interface
+  %           to a particular numerical problem
+  %     \item \emph{Converter} - a language-specific converter of data
+  %           to intermediate C representation
+  %     \item \emph{Dispatch} - a C library that takes the data in C representation,
+  %           loads a Bridge and asks it to load an implementation and stores it
+  %           in a table
+  %   \end{itemize}
+  % \end{minipage}
+  % \begin{minipage}{0.48\textwidth}
+  %   \onslide<2->
+  %   \centering \textbf{Implementation-facing components}
+  %   \begin{itemize}
+  %     \item \emph{Bridge} - a language-specific C library that converts data
+  %           to native types and invokes implementation functions
+  %     \item \emph{Interface} - a virtual component that has, in principle,
+  %           the same interface as a \emph{Gateway}
+  %     \item \emph{Adapter} - an adapter from implementation to the \emph{Interface}
+  %     \item \emph{Implementation} - actual solver, outside of system's boundary
+  %   \end{itemize}
+  % \end{minipage}
 \end{frame}
 
 \begin{frame}{Software details: Loading an implementation}
@@ -178,25 +179,40 @@
   \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
 \end{frame}
 
-\begin{frame}{Software details: Currently supported languages, data types, function calls}
+\begin{frame}{Software details: Currently supported languages, data types}
   \begin{itemize}
     \onslide<1->
     \item Languages: C, Julia, and Python
           \onslide<2->
     \item Data types:
           \begin{itemize}
-            \item \texttt{OIF\_INT} - 32-bit integers
-            \item \texttt{OIF\_FLOAT64} - 64-bit floating-point numbers
-            \item \texttt{OIF\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
-            \item \texttt{OIF\_STR} - strings
-            \item \texttt{OIF\_CALLBACK} - callback functions
-            \item \texttt{OIF\_USER\_DATA} - user-data objects of volatile type
-            \item \texttt{OIF\_CONFIG\_DICT} - option-value pairs
+            \item \texttt{OIF\_TYPE\_INT} - 32-bit integers
+            \item \texttt{OIF\_TYPE\_F64} - 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_STRING} - strings
+            \item \texttt{OIF\_TYPE\_CALLBACK} - callback functions
+            \item \texttt{OIF\_TYPE\_USER\_DATA} - user-data objects of volatile type
+            \item \texttt{OIF\_TYPE\_CONFIG\_DICT} - option-value pairs
           \end{itemize}
           \onslide<3->
-    \item On implementation side function are invoked via
+    \item Interfaces (numerical problems): time integration, optimization
+      (work-in-progress)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Software details: function calls, quality assurance}
+  \begin{itemize}
+    \item Functions arguments are read-only or mutable (passed by reference),
+      or return values (copied)
+          \onslide<2->
+    \item On implementation side, functions are invoked via
           the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
           in C and via C API in embedded Python/Julia
+          \onslide<3->
+          \vspace{1em}
+    \item Builds via CMake
+    \item Testing: CTest + Google Test, pytest, Testing.jl
+    \item Continuous integration on GitHub Actions
   \end{itemize}
 \end{frame}
 
@@ -221,7 +237,7 @@
   \end{minted}
 \end{frame}
 
-\begin{frame}{Software details: Passing arrays does not incur memory copies}
+\begin{frame}{Software details: Arrays are mutable arguments}
   \centering
   \includegraphics[scale=0.1]{arrays}
 
@@ -324,7 +340,7 @@
     \column{0.4\textwidth - 2\tabcolsep}
     \onslide<6->{%
       \textbf{\color{CGreenD}Success}\\
-      More efficient solution using \texttt{OrdinaryDiffEq.jl}
+      More efficient solution using \texttt{OrdinaryDiffEq.jl} in 2 seconds.
     }
   \end{columns}
 \end{frame}
@@ -458,21 +474,32 @@
   \end{tabular}
 \end{frame}
 
-% \input{slides/mardi.tex}
-
 \begin{frame}
   \frametitle{Software availability}
   \begin{minipage}{0.618\textwidth}
     \begin{itemize}
       \item Open source, BSD-2-Clause License
+      \onslide<2->
+      \item Linux + macOS
       \item \url{https://github.com/MaRDI4NFDI/open-interfaces}
-      \item Paper: \url{https://doi.org/10.5334/jors.569}
+      \item \texttt{pip install openinterfaces}
+      \onslide<3->
+      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI: 10.5334/jors.569]
+      \item Preprint: \url{https://arxiv.org/abs/2504.03628}
     \end{itemize}
   \end{minipage}%
-  \begin{minipage}{0.382\textwidth}
-    \includegraphics[scale=0.2]{github}
+  \hfill
+  \begin{minipage}{0.282\textwidth}
+    \onslide<1->
+    \includegraphics[scale=0.15]{qr/mardi-oif-github.png}
+    \\Repository\\
+    \\
+    \includegraphics[scale=0.15]{qr/mardi-oif-paper.png}
+    \\Paper\\
   \end{minipage}
 \end{frame}
+
+\input{slides/mardi.tex}
 
 \begin{frame}
   \centering
