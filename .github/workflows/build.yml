@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
@@ -39,3 +41,13 @@ jobs:
         pdflatex pairwise_bindings.tex
         cd ..
         latexmk -pdf -interaction=nonstopmode -halt-on-error talk*.tex
+
+    - name: Rename PDF file
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: mv talk-mardi-open-interfaces.pdf talk-mardi-open-interfaces-${{ github.ref_name }}.pdf
+
+    - name: Create release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: talk-mardi-open-interfaces-${{ github.ref_name }}.pdf
