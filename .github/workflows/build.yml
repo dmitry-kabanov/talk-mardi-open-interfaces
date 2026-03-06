@@ -33,24 +33,12 @@ jobs:
           cd ..
           latexmk -pdf -interaction=nonstopmode -halt-on-error talk*.tex
 
-    - name: Create annotated tag from branch name
-      if: github.ref_type == 'branch' && github.ref_name != 'main' && github.event_name == 'push'
-      id: tag
-      run: |
-        TAG_NAME="v${{ github.ref_name }}"
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git tag -a "$TAG_NAME" -m "Release $TAG_NAME from branch ${{ github.ref_name }}"
-        git push origin "$TAG_NAME"
-        echo "name=$TAG_NAME" >> $GITHUB_OUTPUT
-
     - name: Rename PDF file
-      if: github.ref_type == 'branch' && github.ref_name != 'main' && github.event_name == 'push'
-      run: mv talk-mardi-open-interfaces.pdf mardi-open-interfaces_kabanov-rave-ohlberger_${{ steps.tag.outputs.name }}.pdf
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: mv talk-mardi-open-interfaces.pdf mardi-open-interfaces_kabanov-rave-ohlberger_${{ github.ref_name }}.pdf
 
     - name: Create release
-      if: github.ref_type == 'branch' && github.ref_name != 'main' && github.event_name == 'push'
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ steps.tag.outputs.name }}
-        files: mardi-open-interfaces_kabanov-rave-ohlberger_${{ steps.tag.outputs.name }}.pdf
+        files: mardi-open-interfaces_kabanov-rave-ohlberger_${{ github.ref_name }}.pdf
