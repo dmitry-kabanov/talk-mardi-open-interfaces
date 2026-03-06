@@ -24,7 +24,7 @@ jobs:
         lfs: true       # Enable Git LFS, because images are in LFS
 
     - name: Compile LaTeX Beamer with latexmk
-    - uses: xu-cheng/texlive-action@v3
+      uses: xu-cheng/texlive-action@v3
       with:
         run: |
           cd tikz
