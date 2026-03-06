@@ -5,7 +5,7 @@
   english,
 ]{beamer}
 \usetheme[
-  numbering=none,    % Slide numbers: {none, *counter*, fraction}
+  numbering=fraction,    % Slide numbers: {none, *counter*, fraction}
   progressbar=none,  % {*none*, head, frametitle, foot}
 ]{metropolis}
 % \usetheme[language=en]{UniMS}
@@ -31,12 +31,10 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{%
-  The MaRDI Open Interfaces software project\\to improve interoperability in
-  Scientific Computing}
+\title{MaRDI Open Interfaces for Scientific Computing}
 \author{Dmitry I.\ Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Mathematics Münster, University of Münster, Germany}
-\date{Oberseminar Numerik, 29 October 2025}
+\date{Kickoff Meeting of the GAMM RSE-RDM Activity Group, 4 December 2025}
 \titlegraphic{\vspace{0.8\textheight}\hspace{0.38\textwidth}
   \includegraphics[width=0.618\textwidth]{logos/logos}
 }
@@ -116,7 +114,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{MaRDI Open Interfaces (TA2 Measure 2)}
+\begin{frame}{MaRDI Open Interfaces}
   \begin{minipage}{0.45\textwidth}
     To solve both problems simultaneously:
     \begin{itemize}
@@ -232,89 +230,9 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\section{Examples with the interface for initial-value problems for ODEs (time integration)}
+\section{Example with the interface for initial-value problems for ODEs (time integration)}
 
-\begin{frame}[fragile]{Interface for initial-value problems for ODEs}
-  \begin{minipage}{\dimexpr0.22\textwidth-2\tabcolsep}
-    \begin{align*}
-      y'(t)  & = f(t, y) \\
-      y(t_0) & = y_0
-    \end{align*}
-  \end{minipage}
-  \begin{minipage}{\dimexpr0.73\textwidth-2\tabcolsep}
-    {\footnotesize
-      \begin{minted}{Python}
-      # Set initial value y(t0) = y0.
-      set_initial_value(y0: array, t0: float64)
-
-      # Specify right-hand side function with signature
-      # f(t: float64, y: array, ydot: array, user_data: object).
-      set_rhs_fn(f: Callback)
-
-      # Specify relative and absolute tolerances.
-      set_tolerances(rtol: float64, atol: float64)
-
-      # Set additional data passed to right-hand side function.
-      set_user_data(user_data: object)
-
-      # Set integrator and its parameters
-      set_integrator(integrator_name: str, params: object)
-
-      # Integrate to time t and write solution to y.
-      integrate(t: float64, y: array)
-    \end{minted}
-    }
-  \end{minipage}
-\end{frame}
-
-\begin{frame}[fragile]{Example 1: Exponential decay from C}
-  \begin{columns}
-    \column{0.3\textwidth}
-    \begin{align*}
-      \frac{\mathrm d y}{\mathrm d t} & = -y \\
-      y(0)                            & = 1
-    \end{align*}
-    \vspace{-2em}
-    \onslide<2>
-    \begin{minted}[beameroverlays, escapeinside=||]{C}
-int rhs(
-  double t,
-  OIFArrayF64 *y,
-  OIFArrayF64 *rhs_out,
-  void *user_data)
-{
-  for (
-    int i = 0;
-    i < y->dimensions[0]; ++i) {
-      rhs_out->data[i] = -y->data[i];
-  }
-  return 0;
-}
-\end{minted}
-    \column{0.7\textwidth}
-    \onslide<3->
-    \begin{minted}[beameroverlays, escapeinside=||]{C}
-    char *|\textbf<4>{impl\_name}| = <implementation-string>;
-    OIFArrayF64 *|\textbf<6>{y0}| = oif_create_array_f64(
-      1, (intptr_t[1]){N});
-    |\textbf<6>{y0}|->data[0] = 1.0;
-    OIFArrayF64 *|\textbf<8>{y}| = oif_create_array_f64(
-      1, (intptr_t[1]){N});
-
-    ImplHandle |\textbf<5>{implh}| = oif_init_impl(
-      "ivp", |\textbf<4>{impl\_name}|, 1, 0);
-    status = oif_ivp_set_initial_value(|\textbf<5>{implh}|, |\textbf<6>{\{y0\}}|, |\textbf<6>{0.0}|);
-    status = oif_ivp_set_rhs_fn(|\textbf<5>{implh}|, |\textbf<7>{rhs}|);
-
-    for (int i = 0; i < n_time_steps; ++i) {
-        t = t0 + (i + 1) * dt;
-        status = oif_ivp_integrate(|\textbf<5>{implh}|, t, |\textbf<8>{y}|);
-    }
-  \end{minted}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Example 2: Solving a stiff system}
+\begin{frame}[fragile]{Example: Solving a stiff system}
   \begin{columns}[t]
     \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
     Van der Pol equation:
@@ -362,7 +280,7 @@ int rhs(
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Example 2: Solving a stiff system}
+\begin{frame}[fragile]{Example: Solving a stiff system}
   \onslide<1->
   \begin{columns}
     \column{\dimexpr 0.6\textwidth - 2\tabcolsep}
@@ -548,7 +466,7 @@ int rhs(
     \begin{itemize}
       \item Open source, BSD-2-Clause License
       \item \url{https://github.com/MaRDI4NFDI/open-interfaces}
-      \item Preprint: \url{https://arxiv.org/abs/2504.03628}
+      \item Paper: \url{https://doi.org/10.5334/jors.569}
     \end{itemize}
   \end{minipage}%
   \begin{minipage}{0.382\textwidth}
