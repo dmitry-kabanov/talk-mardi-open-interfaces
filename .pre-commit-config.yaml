@@ -1,0 +1,15 @@
+repos:
+  # Generic helpers: whitespace, EOLs, etc.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+  # LaTeX formatter
+  - repo: https://github.com/cmhughes/latexindent.pl
+    rev: V3.24.7
+    hooks:
+      - id: latexindent
+        args: [-l, -m, -s, -w]  # use local .latexindent.yaml etc.
