@@ -13,3 +13,10 @@ repos:
     hooks:
       - id: latexindent
         args: [-l, -m, -s, -w]  # use local .latexindent.yaml etc.
+
+  - repo: https://github.com/meliache/pre-commit-chktex
+    rev: v0.2.2
+    hooks:
+      - id: chktex-system
+        name: "Look for typographic errors in LaTeX with ChkTeX."
+        entry: "chktex --verbosity=2"
