@@ -187,13 +187,13 @@
           \onslide<2->
     \item Data types:
           \begin{itemize}
-            \item \texttt{OIF\_TYPE\_INT} - 32-bit integers
-            \item \texttt{OIF\_TYPE\_F64} - 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_STRING} - strings
-            \item \texttt{OIF\_TYPE\_CALLBACK} - callback functions
-            \item \texttt{OIF\_TYPE\_USER\_DATA} - user-data objects of volatile type
-            \item \texttt{OIF\_TYPE\_CONFIG\_DICT} - option-value pairs
+            \item \texttt{OIF\_TYPE\_INT}: 32-bit integers
+            \item \texttt{OIF\_TYPE\_F64}: 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_ARRAY\_F64}: arrays of 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_STRING}: strings
+            \item \texttt{OIF\_TYPE\_CALLBACK}: callback functions
+            \item \texttt{OIF\_TYPE\_USER\_DATA}: user-data objects of volatile type
+            \item \texttt{OIF\_TYPE\_CONFIG\_DICT}: option-value pairs
           \end{itemize}
           \onslide<3->
     \item Interfaces (numerical problems): time integration, optimization
@@ -398,7 +398,8 @@
 % \end{frame}
 
 \begin{frame}{Performance study}
-  \begin{minipage}{\dimexpr0.6\textwidth - 2\tabcolsep}
+  \begin{columns}
+    \column{0.6\textwidth}
     We solve inviscid Burgers' equation
     \begin{align*}
        & \frac{\partial u}{\partial t} + \frac{\partial \left( u^{2} / 2 \right)}{\partial x} = 0,
@@ -408,18 +409,16 @@
     \end{align*}
     using implementations of the Dormand--Prince Runge--Kutta 5(4) method:
     \begin{itemize}
-      \item C: reimplemented from the original Fortran code\footnote{%
+      \item C\@: reimplemented from the original Fortran code\footnote{%
               Hairer E., Wanner, G., Nørsett, S.\ P.
-              \emph{Solving Ordinary Differential Equations I: Nonstiff Problems}, 1993}
-      \item Julia: OrdinaryDiffEq.jl\footnote{%
+              \emph{Solving Ordinary Differential Equations I\@: Nonstiff Problems}, 1993}
+      \item Julia\@: OrdinaryDiffEq.jl\footnote{%
               \url{https://github.com/SciML/OrdinaryDiffEq.jl}} \texttt{DP5}
-      \item Python: SciPy\footnote{\url{https://scipy.org/}} \texttt{dopri5}
+      \item Python\@: SciPy\footnote{\url{https://scipy.org/}} \texttt{dopri5}
     \end{itemize}
-  \end{minipage}\hfill
-  \begin{minipage}{\dimexpr0.4\textwidth - 2\tabcolsep}
-    % \includegraphics[width=0.9\textwidth]{ivp_c_burgers_eq}
-    \includegraphics[width=0.9\textwidth]{ivp-burgers}
-  \end{minipage}
+    \column{0.4\textwidth}
+        \includegraphics[width=0.9\textwidth]{ivp-burgers}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -456,7 +455,7 @@
   \centering
   \begin{tabular}{l l l l c c}
     \toprule
-    \myheader                                                                                    \\
+    \myheader{}                                                                                    \\
                        &           &     &          & 6400                & 25\,600              \\
     \midrule
     \multirow{2}{*}{1} & C         & OIF & DOPRI5-C & 1.011 \(\pm\) 0.017 & 21.006 \(\pm\) 0.100 \\
@@ -485,7 +484,7 @@
       \item \url{https://github.com/MaRDI4NFDI/open-interfaces}
       \item \texttt{pip install openinterfaces}
             \onslide<3->
-      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI: 10.5334/jors.569]
+      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI\@: 10.5334/jors.569]
       \item Preprint: \url{https://arxiv.org/abs/2504.03628}
     \end{itemize}
   \end{minipage}%
