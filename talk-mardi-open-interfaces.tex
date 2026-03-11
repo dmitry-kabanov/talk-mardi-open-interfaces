@@ -3,6 +3,7 @@
   10pt,
   aspectratio=169,
   english,
+  onlytextwidth,  % Compute widths ignoring padding
 ]{beamer}
 \usetheme[
   numbering=fraction,    % Slide numbers: {none, *counter*, fraction}
@@ -87,7 +88,7 @@
 
 \begin{frame}{Another solution}
   \begin{columns}[t]
-    \column{0.5\textwidth - 2\tabcolsep}
+    \column{0.5\textwidth}
     To solve both issues:
     \begin{itemize}
       \item \textbf{provide generic interfaces} for typical numerical problems,
@@ -98,7 +99,7 @@
             (using tools like Cython, etc.)
     \end{itemize}
 
-    \column{0.5\textwidth - 2\tabcolsep}
+    \column{0.5\textwidth}
     \onslide<2->
     Examples of generic interfaces are:
     \begin{itemize}
@@ -250,7 +251,7 @@
 
 \begin{frame}[fragile]{Example: Solving a stiff system}
   \begin{columns}[t]
-    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     Van der Pol equation:
     \[
       \frac{\mathrm{d}^2 x}{\mathrm{d} t^2} - \mu
@@ -274,7 +275,7 @@
     \begin{tikzpicture}[overlay, remember picture]
       \node at (3, 4) {\includegraphics[width=0.99\textwidth]{ivp-vdp}};
     \end{tikzpicture}
-    \column{0.6\textwidth - 2\tabcolsep}%
+    \column{0.6\textwidth}%
     \onslide<4->
     User code in Python:
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
@@ -299,12 +300,12 @@
 \begin{frame}[fragile]{Example: Solving a stiff system}
   \onslide<1->
   \begin{columns}
-    \column{\dimexpr 0.6\textwidth - 2\tabcolsep}
+    \column{0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
         s = IVP("scipy_ode")
         s.set_integrator("dopri5", {"nsteps": 100_000})
       \end{minted}
-    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     \onslide<2->{%
       \textbf{\color{CRedD}Fail}\\
       \texttt{UserWarning: dopri5: problem is probably stiff}
@@ -314,13 +315,13 @@
   \vspace{3em}
   \onslide<3->
   \begin{columns}
-    \column{0.6\textwidth - 2\tabcolsep}
+    \column{0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("scipy_ode")
           s.set_integrator("vode", {"nsteps": 40_000})
         \end{minted}
 
-    \column{0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     \onslide<4->{%
       \textbf{\color{CGreenD}Success}\\
       However, time-to-solution is about 10 seconds.
@@ -330,14 +331,14 @@
   \vspace{3em}
   \onslide<5->
   \begin{columns}
-    \column{0.6\textwidth - 2\tabcolsep}
+    \column{0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("jl_diffeq")
           s.set_integrator("Rosenbrock23")
           s.set_initial_value(problem.y0, problem.t0)
           s.set_rhs_fn(problem.compute_rhs)
         \end{minted}
-    \column{0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     \onslide<6->{%
       \textbf{\color{CGreenD}Success}\\
       More efficient solution using \texttt{OrdinaryDiffEq.jl} in 2 seconds.
@@ -511,5 +512,5 @@
 \end{frame}
 
 % \appendix
-% \begin{frame}{Backup slide 1} ...
+% \begin{frame}{Backup slide 1}
 \end{document}
