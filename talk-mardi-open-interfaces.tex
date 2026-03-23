@@ -2,6 +2,7 @@
 \documentclass[
   10pt,
   aspectratio=169,
+  onlytextwidth,
   english,
 ]{beamer}
 \usetheme[
@@ -87,22 +88,22 @@
 
 \begin{frame}{Indirect solution}
   \begin{columns}[t]
-    \column{0.5\textwidth - 2\tabcolsep}
-      \textbf{Provide generic interfaces} for typical numerical problems,
-            employing the software principle
-            \emph{``program against an interface, not an implementation''}
+    \column{0.5\textwidth}
+    \textbf{Provide generic interfaces} for typical numerical problems,
+    employing the software principle
+    \emph{``program against an interface, not an implementation''}
 
-    \column{0.5\textwidth - 2\tabcolsep}
+    \column{0.5\textwidth}
     \onslide<2->
-      \textbf{Automate data marshalling} between languages
-            to avoid writing manual/semi-manual bindings
-            (using tools like Cython, etc.)
+    \textbf{Automate data marshalling} between languages
+    to avoid writing manual/semi-manual bindings
+    (using tools like Cython, etc.)
     %% Examples of generic interfaces are:
     %% \begin{itemize}
     %%   \item \texttt{BLAS} for basic linear algebra
     %%   \item \texttt{scipy.optimize} in Python for optimization algorithms
     %%   \item \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
-      %% \item \texttt{PyMOR} for model-order reduction simulations
+    %% \item \texttt{PyMOR} for model-order reduction simulations
 
     %% However, the above packages concentrate on solving only
     %% the problem of different interfaces, not on the problem
@@ -182,24 +183,24 @@
           \onslide<2->
     \item Data types:
           \begin{itemize}
-            \item \texttt{OIF\_TYPE\_INT} - 32-bit integers
-            \item \texttt{OIF\_TYPE\_F64} - 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_STRING} - strings
-            \item \texttt{OIF\_TYPE\_CALLBACK} - callback functions
-            \item \texttt{OIF\_TYPE\_USER\_DATA} - user-data objects of volatile type
-            \item \texttt{OIF\_TYPE\_CONFIG\_DICT} - option-value pairs
+            \item \texttt{OIF\_TYPE\_INT}: 32-bit integers
+            \item \texttt{OIF\_TYPE\_F64}: 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_ARRAY\_F64}: arrays of 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_STRING}: strings
+            \item \texttt{OIF\_TYPE\_CALLBACK}: callback functions
+            \item \texttt{OIF\_TYPE\_USER\_DATA}: user-data objects of volatile type
+            \item \texttt{OIF\_TYPE\_CONFIG\_DICT}: option-value pairs
           \end{itemize}
           \onslide<3->
     \item Interfaces (numerical problems): time integration, optimization
-      (work-in-progress)
+          (work-in-progress)
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Software details: function calls, quality assurance}
   \begin{itemize}
     \item Functions arguments are read-only or mutable (passed by reference),
-      or return values (copied)
+          or return values (copied)
           \onslide<2->
     \item On implementation side, functions are invoked via
           the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
@@ -245,28 +246,29 @@
 \section{Example 1: interface for optimization for Julia users}
 
 \begin{frame}[fragile]{Example 1: Minimizing the Rosenbrock function}
-\begin{columns}
-  \begin{column}{\dimexpr0.55\textwidth-2\tabcolsep}
-  We seek $x^* \in \mathbb R^n$ of the Rosenbrock function\footnotemark[1]:
-  \begin{align*}
-    x^* = \mathrm{arg\,min}_x
-      \sum_{i=1}^{n-1} a \left( x_{i+1} - x_i^2 \right)^2 +
-      \left( 1 - x_i \right)^2 + b
-  \end{align*}
-with an exact minimum at \( x^* = [1, \ldots, 1]\).
-\end{column}
-\begin{column}{\dimexpr0.45\textwidth-2\tabcolsep}
-  \centering
-  \includegraphics[scale=0.3]{rosenbrock_contour}
-\end{column}
-\end{columns}
-\footnotetext[1]{Rosenbrock, H.H. (1960). "An automatic method for finding the greatest or least value of a function"}
+  \begin{columns}
+    \begin{column}{\dimexpr0.55\textwidth-2\tabcolsep}
+      We seek $x^* \in \mathbb R^n$ of the Rosenbrock function\footnotemark[1]:
+      \begin{align*}
+        x^* = \argmin_{x\in\mathbb R^n}
+        \sum_{i=1}^{n-1} a {\left( x_{i+1} - x_i^2 \right)}^2 +
+        {\left( 1 - x_i \right)}^2 + b
+      \end{align*}
+      with an exact minimum at \( x^* = [1, \ldots, 1]\).
+    \end{column}
+    \begin{column}{\dimexpr0.45\textwidth-2\tabcolsep}
+      \centering
+      \includegraphics[scale=0.3]{rosenbrock_contour}
+    \end{column}
+  \end{columns}
+  \footnotetext[1]{Rosenbrock, H.H. (1960). ``An automatic method for finding
+  the greatest or least value of a function''}
 \end{frame}
 
 \begin{frame}[fragile]{Example 1: Julia user calls \textsc{Ipopt.jl}}
   \begin{columns}
-    \begin{column}{\dimexpr0.7\textwidth - 2\tabcolsep}
-  \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
+    \begin{column}{\dimexpr0.7\textwidth}
+      \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
     x0 = [3.14, 2.72, 42.0, 9.81, 8.31]
     user_data = (10, -1)
 
@@ -276,22 +278,22 @@ with an exact minimum at \( x^* = [1, \ldots, 1]\).
     Optim.set_objective_fn(s, rosenbrock_fn)
     status, message = Optim.minimize(s)
     \end{minted}
-  \end{column}
+    \end{column}
   \end{columns}
 
   \onslide<2->
   \vspace{1em}
   \hrule
   \texttt{%
-    Message: The algorithm converged to a stationary point, local optimal solution, could not find directions for improvement, or otherwise completed its search without global guarantees.\\
-x = [1.000000000670358, 1.0000000013562615, 1.0000000027223896, 1.0000000053026934, 1.000000009561287]
-}
+  Message: The algorithm converged to a stationary point, local optimal solution, could not find directions for improvement, or otherwise completed its search without global guarantees.\\
+  x = [1.000000000670358, 1.0000000013562615, 1.0000000027223896, 1.0000000053026934, 1.000000009561287]
+  }
 \end{frame}
 
 \begin{frame}[fragile]{Example 1: Julia user calls \textsc{SciPy}}
   \begin{columns}
-  \begin{column}{\dimexpr0.7\textwidth}
-  \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
+    \begin{column}{\dimexpr0.7\textwidth}
+      \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
     x0 = [3.14, 2.72, 42.0, 9.81, 8.31]
     user_data = (10, -1)
 
@@ -305,7 +307,7 @@ x = [1.000000000670358, 1.0000000013562615, 1.0000000027223896, 1.00000000530269
     Optim.set_objective_fn(s, rosenbrock_fn)
     status, message = Optim.minimize(s)
     \end{minted}
-  \end{column}
+    \end{column}
 
   \end{columns}
 
@@ -313,9 +315,9 @@ x = [1.000000000670358, 1.0000000013562615, 1.0000000027223896, 1.00000000530269
   \vspace{1em}
   \hrule
   \texttt{%
-    Message: Optimization terminated successfully.\\
-x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.0000000005750314, 1.0000000013416621]
-}
+  Message: Optimization terminated successfully.\\
+  x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.0000000005750314, 1.0000000013416621]
+  }
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -323,7 +325,7 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
 
 \begin{frame}[fragile]{Example 2: Solving a stiff system}
   \begin{columns}[t]
-    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+    \column{\dimexpr0.4\textwidth}
     Van der Pol equation:
     \[
       \frac{\mathrm{d}^2 x}{\mathrm{d} t^2} - \mu
@@ -347,7 +349,7 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
     \begin{tikzpicture}[overlay, remember picture]
       \node at (3, 4) {\includegraphics[width=0.99\textwidth]{ivp-vdp}};
     \end{tikzpicture}
-    \column{0.6\textwidth - 2\tabcolsep}%
+    \column{0.6\textwidth}%
     \onslide<4->
     User code in Python:
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
@@ -372,12 +374,12 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
 \begin{frame}[fragile]{Example 2: Solving a stiff system}
   \onslide<1->
   \begin{columns}
-    \column{\dimexpr 0.6\textwidth - 2\tabcolsep}
+    \column{\dimexpr0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
         s = IVP("scipy_ode")
         s.set_integrator("dopri5", {"nsteps": 100_000})
       \end{minted}
-    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
+    \column{\dimexpr0.4\textwidth}
     \onslide<2->{%
       \textbf{\color{CRedD}Fail}\\
       \texttt{UserWarning: dopri5: problem is probably stiff}
@@ -387,13 +389,13 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
   \vspace{3em}
   \onslide<3->
   \begin{columns}
-    \column{0.6\textwidth - 2\tabcolsep}
+    \column{0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("scipy_ode")
           s.set_integrator("vode", {"nsteps": 40_000})
         \end{minted}
 
-    \column{0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     \onslide<4->{%
       \textbf{\color{CGreenD}Success}\\
       However, time-to-solution is about 10 seconds.
@@ -403,14 +405,14 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
   \vspace{3em}
   \onslide<5->
   \begin{columns}
-    \column{0.6\textwidth - 2\tabcolsep}
+    \column{0.6\textwidth}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("jl_diffeq")
           s.set_integrator("Rosenbrock23")
           s.set_initial_value(problem.y0, problem.t0)
           s.set_rhs_fn(problem.compute_rhs)
         \end{minted}
-    \column{0.4\textwidth - 2\tabcolsep}
+    \column{0.4\textwidth}
     \onslide<6->{%
       \textbf{\color{CGreenD}Success}\\
       More efficient solution using \texttt{OrdinaryDiffEq.jl} in 2 seconds.
@@ -470,7 +472,7 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
 % \end{frame}
 
 \begin{frame}{Performance study}
-  \begin{minipage}{\dimexpr0.6\textwidth - 2\tabcolsep}
+  \begin{minipage}{\dimexpr0.6\textwidth}
     We solve inviscid Burgers' equation
     \begin{align*}
        & \frac{\partial u}{\partial t} + \frac{\partial \left( u^{2} / 2 \right)}{\partial x} = 0,
@@ -480,15 +482,15 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
     \end{align*}
     using implementations of the Dormand--Prince Runge--Kutta 5(4) method:
     \begin{itemize}
-      \item C: reimplemented from the original Fortran code\footnote{%
+      \item C:\@reimplemented from the original Fortran code\footnote{%
               Hairer E., Wanner, G., Nørsett, S.\ P.
-              \emph{Solving Ordinary Differential Equations I: Nonstiff Problems}, 1993}
+              \emph{Solving Ordinary Differential Equations I:\@Nonstiff Problems}, 1993}
       \item Julia: OrdinaryDiffEq.jl\footnote{%
               \url{https://github.com/SciML/OrdinaryDiffEq.jl}} \texttt{DP5}
       \item Python: SciPy\footnote{\url{https://scipy.org/}} \texttt{dopri5}
     \end{itemize}
   \end{minipage}\hfill
-  \begin{minipage}{\dimexpr0.4\textwidth - 2\tabcolsep}
+  \begin{minipage}{\dimexpr0.4\textwidth}
     % \includegraphics[width=0.9\textwidth]{ivp_c_burgers_eq}
     \includegraphics[width=0.9\textwidth]{ivp-burgers}
   \end{minipage}
@@ -509,7 +511,7 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
   \centering
   \begin{tabular}{l l l l c c}
     \toprule
-    \myheader                                                                                    \\
+    \myheader{}                                                                                   \\
                        &           &     &          & 6400                & 25\,600              \\
     \midrule
     \multirow{2}{*}{1} & C         & OIF & DOPRI5-C & 1.011 \(\pm\) 0.017 & 21.006 \(\pm\) 0.100 \\
@@ -533,12 +535,12 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
   \begin{minipage}{0.618\textwidth}
     \begin{itemize}
       \item Open source, BSD-2-Clause License
-      \onslide<2->
+            \onslide<2->
       \item Linux + macOS
       \item \url{https://github.com/MaRDI4NFDI/open-interfaces}
       \item \texttt{pip install openinterfaces}
-      \onslide<3->
-      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI: 10.5334/jors.569]
+            \onslide<3->
+      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI:\@10.5334/jors.569]
       \item Preprint: \url{https://arxiv.org/abs/2504.03628}
     \end{itemize}
   \end{minipage}%
@@ -556,14 +558,14 @@ x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.00000000057503
 \begin{frame}{Summary}
   \begin{itemize}
     \item \emph{MaRDI Open Interfaces} provides a way
-      to avoid error-prone and time-consuming
-      code modifications and testing for computational projects
+          to avoid error-prone and time-consuming
+          code modifications and testing for computational projects
     \item Currently there is support for three programming languages: C, Julia, and Python
     \item Currently there is for two interfaces: initial-value problems for ODEs
-      and nonlinear optimization (WIP)
+          and nonlinear optimization (WIP)
     \item Cross-language interoperability does not sacrifice performance,
-      as arrays are shared
-    \onslide<2->
+          as arrays are shared
+          \onslide<2->
     \item We are open for collaborations and contributions!
   \end{itemize}
 \end{frame}
