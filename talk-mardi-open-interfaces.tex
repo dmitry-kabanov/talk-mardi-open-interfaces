@@ -3,7 +3,6 @@
   10pt,
   aspectratio=169,
   english,
-  onlytextwidth,  % Compute widths ignoring padding
 ]{beamer}
 \usetheme[
   numbering=fraction,    % Slide numbers: {none, *counter*, fraction}
@@ -32,10 +31,10 @@
 
 % -----------------------------------------------------------------------------
 % Title info
-\title{The MaRDI Open Interfaces Software Project for Scientific Computing}
+\title{Software package \emph{MaRDI Open Interfaces}\\for increased interoperability in computational science}
 \author{Dmitry I.\ Kabanov, Stephan Rave, Mario Ohlberger}
 \institute{Mathematics Münster, University of Münster, Germany}
-\date{deRSE26, Stuttgart, 5 March 2026}
+\date{GAMM 96\textsuperscript{th} Annual Meeting, Stuttgart, 17 March 2026}
 \titlegraphic{\vspace{0.8\textheight}\hspace{0.38\textwidth}
   \includegraphics[width=0.618\textwidth]{logos/logos}
 }
@@ -53,7 +52,7 @@
 % -----------------------------------------------------------------------------
 \section{Motivation}
 
-\begin{frame}{Typical situation in scientific computing}
+\begin{frame}{Typical situation in computational science}
   \begin{itemize}
     \item Often computational scientists need
           to combine multiple solvers to conduct experiments
@@ -65,11 +64,11 @@
           them themselves
     \item \dots Later, there's a need to replace the solver with
           another one $\implies$ code modification
-    \item<2-> \alert{Two problems:} different languages and different interfaces
+    \item<2-> \alert{Two problems:} \textbf{different interfaces} and \textbf{different languages}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Traditional way: direct bindings}
+\begin{frame}{Pairwise solution: connect all languages and solvers}
   \begin{minipage}{0.45\textwidth}
     \begin{itemize}
       \item For a solver in C provide bindings to~$L$~languages: Python, Julia, R, \dots
@@ -86,40 +85,36 @@
   \end{minipage}
 \end{frame}
 
-\begin{frame}{Another solution}
+\begin{frame}{Indirect solution}
   \begin{columns}[t]
-    \column{0.5\textwidth}
-    To solve both issues:
-    \begin{itemize}
-      \item \textbf{provide generic interfaces} for typical numerical problems,
+    \column{0.5\textwidth - 2\tabcolsep}
+      \textbf{Provide generic interfaces} for typical numerical problems,
             employing the software principle
             \emph{``program against an interface, not an implementation''}
-      \item \textbf{automate data marshalling} between languages
+
+    \column{0.5\textwidth - 2\tabcolsep}
+    \onslide<2->
+      \textbf{Automate data marshalling} between languages
             to avoid writing manual/semi-manual bindings
             (using tools like Cython, etc.)
-    \end{itemize}
+    %% Examples of generic interfaces are:
+    %% \begin{itemize}
+    %%   \item \texttt{BLAS} for basic linear algebra
+    %%   \item \texttt{scipy.optimize} in Python for optimization algorithms
+    %%   \item \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
+      %% \item \texttt{PyMOR} for model-order reduction simulations
 
-    \column{0.5\textwidth}
-    \onslide<2->
-    Examples of generic interfaces are:
-    \begin{itemize}
-      \item \texttt{BLAS} for basic linear algebra
-      \item \texttt{scipy.optimize} in Python for optimization algorithms
-      \item \texttt{OrdinaryDiffEqs.jl} in Julia for solving initial-value problems for ODEs
-      \item \texttt{PyMOR} for model-order reduction simulations
-    \end{itemize}
-
-    However, the above packages concentrate on solving only
-    the problem of different interfaces, not on the problem
-    of data marshalling.
+    %% However, the above packages concentrate on solving only
+    %% the problem of different interfaces, not on the problem
+    %% of data marshalling.
   \end{columns}
 \end{frame}
 
-\begin{frame}{MaRDI Open Interfaces}
+\begin{frame}{Indirect solution: \emph{MaRDI Open Interfaces}}
   \begin{minipage}{0.45\textwidth}
     To solve both problems simultaneously:
     \begin{itemize}
-      \item Provide a mediator library \texttt{OIF} that:
+      \item Provides a mediator library \texttt{OIF} that:
             \begin{itemize}
               \item handles data marshalling between different languages
               \item provides a set of generic interfaces
@@ -170,15 +165,15 @@
   % \end{minipage}
 \end{frame}
 
-\begin{frame}{Software details: Loading an implementation}
-  \centering
-  \includegraphics[scale=0.7]{uml-diagrams/impl_1_load}
-\end{frame}
+%% \begin{frame}{Software details: Loading an implementation}
+%%   \centering
+%%   \includegraphics[scale=0.7]{uml-diagrams/impl_1_load}
+%% \end{frame}
 
-\begin{frame}{Software details: Calling an implementation}
-  \centering
-  \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
-\end{frame}
+%% \begin{frame}{Software details: Calling an implementation}
+%%   \centering
+%%   \includegraphics[scale=0.7]{uml-diagrams/impl_2_call}
+%% \end{frame}
 
 \begin{frame}{Software details: Currently supported languages, data types}
   \begin{itemize}
@@ -187,24 +182,24 @@
           \onslide<2->
     \item Data types:
           \begin{itemize}
-            \item \texttt{OIF\_TYPE\_INT}: 32-bit integers
-            \item \texttt{OIF\_TYPE\_F64}: 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_ARRAY\_F64}: arrays of 64-bit floating-point numbers
-            \item \texttt{OIF\_TYPE\_STRING}: strings
-            \item \texttt{OIF\_TYPE\_CALLBACK}: callback functions
-            \item \texttt{OIF\_TYPE\_USER\_DATA}: user-data objects of volatile type
-            \item \texttt{OIF\_TYPE\_CONFIG\_DICT}: option-value pairs
+            \item \texttt{OIF\_TYPE\_INT} - 32-bit integers
+            \item \texttt{OIF\_TYPE\_F64} - 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_ARRAY\_F64} - arrays of 64-bit floating-point numbers
+            \item \texttt{OIF\_TYPE\_STRING} - strings
+            \item \texttt{OIF\_TYPE\_CALLBACK} - callback functions
+            \item \texttt{OIF\_TYPE\_USER\_DATA} - user-data objects of volatile type
+            \item \texttt{OIF\_TYPE\_CONFIG\_DICT} - option-value pairs
           \end{itemize}
           \onslide<3->
     \item Interfaces (numerical problems): time integration, optimization
-          (work-in-progress)
+      (work-in-progress)
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Software details: function calls, quality assurance}
   \begin{itemize}
     \item Functions arguments are read-only or mutable (passed by reference),
-          or return values (copied)
+      or return values (copied)
           \onslide<2->
     \item On implementation side, functions are invoked via
           the Foreign Function Interface library \texttt{libffi}\footnote{\url{https://sourceware.org/libffi/}}
@@ -217,26 +212,26 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Software details: Special data structures for C}
-  \small Package provides special data structures in C to ensure consistency
-  with Julia and Python interfaces:
+%% \begin{frame}[fragile]{Software details: Special data structures for C}
+%%   \small Package provides special data structures in C to ensure consistency
+%%   with Julia and Python interfaces:
 
-  \vspace{2em}
-  \texttt{OIFArrayF64} packs array data along with their shape:
-  \begin{minted}{C}
-    OIFArrayF64 *oif_create_array_f64(int nd, intptr_t *dimensions);
-    OIFArrayF64 *oif_init_array_f64_from_data(nd, dimensions, const double *data);
-  \end{minted}
+%%   \vspace{2em}
+%%   \texttt{OIFArrayF64} packs array data along with their shape:
+%%   \begin{minted}{C}
+%%     OIFArrayF64 *oif_create_array_f64(int nd, intptr_t *dimensions);
+%%     OIFArrayF64 *oif_init_array_f64_from_data(nd, dimensions, const double *data);
+%%   \end{minted}
 
-  \onslide<2->
-  \vspace{2em}
-  \texttt{OIFConfigDict} packs key-value pairs together:
-  \begin{minted}{C}
-    void oif_config_dict_add_int(OIFConfigDict *dict, const char *key, int value);
-    void oif_config_dict_add_double(OIFConfigDict *dict, const char *key, double value);
-    void oif_config_dict_add_str(OIFConfigDict *dict, const char *key, const char *value);
-  \end{minted}
-\end{frame}
+%%   \onslide<2->
+%%   \vspace{2em}
+%%   \texttt{OIFConfigDict} packs key-value pairs together:
+%%   \begin{minted}{C}
+%%     void oif_config_dict_add_int(OIFConfigDict *dict, const char *key, int value);
+%%     void oif_config_dict_add_double(OIFConfigDict *dict, const char *key, double value);
+%%     void oif_config_dict_add_str(OIFConfigDict *dict, const char *key, const char *value);
+%%   \end{minted}
+%% \end{frame}
 
 \begin{frame}{Software details: Arrays are mutable arguments}
   \centering
@@ -247,11 +242,88 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\section{Example with the interface for initial-value problems for ODEs (time integration)}
+\section{Example 1: interface for optimization for Julia users}
 
-\begin{frame}[fragile]{Example: Solving a stiff system}
+\begin{frame}[fragile]{Example 1: Minimizing the Rosenbrock function}
+\begin{columns}
+  \begin{column}{\dimexpr0.55\textwidth-2\tabcolsep}
+  We seek $x^* \in \mathbb R^n$ of the Rosenbrock function\footnotemark[1]:
+  \begin{align*}
+    x^* = \mathrm{arg\,min}_x
+      \sum_{i=1}^{n-1} a \left( x_{i+1} - x_i^2 \right)^2 +
+      \left( 1 - x_i \right)^2 + b
+  \end{align*}
+with an exact minimum at \( x^* = [1, \ldots, 1]\).
+\end{column}
+\begin{column}{\dimexpr0.45\textwidth-2\tabcolsep}
+  \centering
+  \includegraphics[scale=0.3]{rosenbrock_contour}
+\end{column}
+\end{columns}
+\footnotetext[1]{Rosenbrock, H.H. (1960). "An automatic method for finding the greatest or least value of a function"}
+\end{frame}
+
+\begin{frame}[fragile]{Example 1: Julia user calls \textsc{Ipopt.jl}}
+  \begin{columns}
+    \begin{column}{\dimexpr0.7\textwidth - 2\tabcolsep}
+  \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
+    x0 = [3.14, 2.72, 42.0, 9.81, 8.31]
+    user_data = (10, -1)
+
+    s = Optim.Self("ipopt_jl")
+    Optim.set_initial_guess(s, x0)
+    Optim.set_user_data(s, user_data)
+    Optim.set_objective_fn(s, rosenbrock_fn)
+    status, message = Optim.minimize(s)
+    \end{minted}
+  \end{column}
+  \end{columns}
+
+  \onslide<2->
+  \vspace{1em}
+  \hrule
+  \texttt{%
+    Message: The algorithm converged to a stationary point, local optimal solution, could not find directions for improvement, or otherwise completed its search without global guarantees.\\
+x = [1.000000000670358, 1.0000000013562615, 1.0000000027223896, 1.0000000053026934, 1.000000009561287]
+}
+\end{frame}
+
+\begin{frame}[fragile]{Example 1: Julia user calls \textsc{SciPy}}
+  \begin{columns}
+  \begin{column}{\dimexpr0.7\textwidth}
+  \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Julia}
+    x0 = [3.14, 2.72, 42.0, 9.81, 8.31]
+    user_data = (10, -1)
+
+    s = Optim.Self("scipy_optimize")
+    Optim.set_initial_guess(s, x0)
+    Optim.set_user_data(s, user_data)
+    Optim.set_method(
+      s, "nelder-mead",
+      Dict("xatol" => 1e-15, "maxiter" => 2000)
+    )
+    Optim.set_objective_fn(s, rosenbrock_fn)
+    status, message = Optim.minimize(s)
+    \end{minted}
+  \end{column}
+
+  \end{columns}
+
+  \onslide<2->
+  \vspace{1em}
+  \hrule
+  \texttt{%
+    Message: Optimization terminated successfully.\\
+x = [1.000000001123758, 1.0000000001685387, 1.0000000001452347, 1.0000000005750314, 1.0000000013416621]
+}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Example 2: interface for initial-value problems}
+
+\begin{frame}[fragile]{Example 2: Solving a stiff system}
   \begin{columns}[t]
-    \column{0.4\textwidth}
+    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
     Van der Pol equation:
     \[
       \frac{\mathrm{d}^2 x}{\mathrm{d} t^2} - \mu
@@ -275,7 +347,7 @@
     \begin{tikzpicture}[overlay, remember picture]
       \node at (3, 4) {\includegraphics[width=0.99\textwidth]{ivp-vdp}};
     \end{tikzpicture}
-    \column{0.6\textwidth}%
+    \column{0.6\textwidth - 2\tabcolsep}%
     \onslide<4->
     User code in Python:
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
@@ -297,15 +369,15 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Example: Solving a stiff system}
+\begin{frame}[fragile]{Example 2: Solving a stiff system}
   \onslide<1->
   \begin{columns}
-    \column{0.6\textwidth}
+    \column{\dimexpr 0.6\textwidth - 2\tabcolsep}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
         s = IVP("scipy_ode")
         s.set_integrator("dopri5", {"nsteps": 100_000})
       \end{minted}
-    \column{0.4\textwidth}
+    \column{\dimexpr 0.4\textwidth - 2\tabcolsep}
     \onslide<2->{%
       \textbf{\color{CRedD}Fail}\\
       \texttt{UserWarning: dopri5: problem is probably stiff}
@@ -315,13 +387,13 @@
   \vspace{3em}
   \onslide<3->
   \begin{columns}
-    \column{0.6\textwidth}
+    \column{0.6\textwidth - 2\tabcolsep}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("scipy_ode")
           s.set_integrator("vode", {"nsteps": 40_000})
         \end{minted}
 
-    \column{0.4\textwidth}
+    \column{0.4\textwidth - 2\tabcolsep}
     \onslide<4->{%
       \textbf{\color{CGreenD}Success}\\
       However, time-to-solution is about 10 seconds.
@@ -331,14 +403,14 @@
   \vspace{3em}
   \onslide<5->
   \begin{columns}
-    \column{0.6\textwidth}
+    \column{0.6\textwidth - 2\tabcolsep}
     \begin{minted}[autogobble, beameroverlays, escapeinside=||]{Python}
           s = IVP("jl_diffeq")
           s.set_integrator("Rosenbrock23")
           s.set_initial_value(problem.y0, problem.t0)
           s.set_rhs_fn(problem.compute_rhs)
         \end{minted}
-    \column{0.4\textwidth}
+    \column{0.4\textwidth - 2\tabcolsep}
     \onslide<6->{%
       \textbf{\color{CGreenD}Success}\\
       More efficient solution using \texttt{OrdinaryDiffEq.jl} in 2 seconds.
@@ -398,8 +470,7 @@
 % \end{frame}
 
 \begin{frame}{Performance study}
-  \begin{columns}
-    \column{0.6\textwidth}
+  \begin{minipage}{\dimexpr0.6\textwidth - 2\tabcolsep}
     We solve inviscid Burgers' equation
     \begin{align*}
        & \frac{\partial u}{\partial t} + \frac{\partial \left( u^{2} / 2 \right)}{\partial x} = 0,
@@ -409,35 +480,18 @@
     \end{align*}
     using implementations of the Dormand--Prince Runge--Kutta 5(4) method:
     \begin{itemize}
-      \item C\@: reimplemented from the original Fortran code\footnote{%
+      \item C: reimplemented from the original Fortran code\footnote{%
               Hairer E., Wanner, G., Nørsett, S.\ P.
-              \emph{Solving Ordinary Differential Equations I\@: Nonstiff Problems}, 1993}
-      \item Julia\@: OrdinaryDiffEq.jl\footnote{%
+              \emph{Solving Ordinary Differential Equations I: Nonstiff Problems}, 1993}
+      \item Julia: OrdinaryDiffEq.jl\footnote{%
               \url{https://github.com/SciML/OrdinaryDiffEq.jl}} \texttt{DP5}
-      \item Python\@: SciPy\footnote{\url{https://scipy.org/}} \texttt{dopri5}
+      \item Python: SciPy\footnote{\url{https://scipy.org/}} \texttt{dopri5}
     \end{itemize}
-    \column{0.4\textwidth}
+  \end{minipage}\hfill
+  \begin{minipage}{\dimexpr0.4\textwidth - 2\tabcolsep}
+    % \includegraphics[width=0.9\textwidth]{ivp_c_burgers_eq}
     \includegraphics[width=0.9\textwidth]{ivp-burgers}
-  \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Performance study: right-hand side implementations}
-
-  \centering
-  Runtimes of only right-hand side functions
-  evaluated 10\,000 times at $N=6\,400$
-  \vspace{1em}
-
-  \begin{tabular}{l c}
-    \toprule
-    Implementation language & Runtime, seconds    \\
-    \midrule
-    C (Clang)               & 0.115 \(\pm\) 0.008 \\
-    Julia                   & 0.122 \(\pm\) 0.016 \\
-    Python (Numba)          & 0.116 \(\pm\) 0.001 \\
-    \bottomrule
-  \end{tabular}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}
@@ -455,7 +509,7 @@
   \centering
   \begin{tabular}{l l l l c c}
     \toprule
-    \myheader{}                                                                                  \\
+    \myheader                                                                                    \\
                        &           &     &          & 6400                & 25\,600              \\
     \midrule
     \multirow{2}{*}{1} & C         & OIF & DOPRI5-C & 1.011 \(\pm\) 0.017 & 21.006 \(\pm\) 0.100 \\
@@ -479,12 +533,12 @@
   \begin{minipage}{0.618\textwidth}
     \begin{itemize}
       \item Open source, BSD-2-Clause License
-            \onslide<2->
+      \onslide<2->
       \item Linux + macOS
       \item \url{https://github.com/MaRDI4NFDI/open-interfaces}
       \item \texttt{pip install openinterfaces}
-            \onslide<3->
-      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI\@: 10.5334/jors.569]
+      \onslide<3->
+      \item Published in \emph{Journal of Open Research Software}, 2025 [DOI: 10.5334/jors.569]
       \item Preprint: \url{https://arxiv.org/abs/2504.03628}
     \end{itemize}
   \end{minipage}%
@@ -499,7 +553,22 @@
   \end{minipage}
 \end{frame}
 
-\input{slides/mardi.tex}
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item \emph{MaRDI Open Interfaces} provides a way
+      to avoid error-prone and time-consuming
+      code modifications and testing for computational projects
+    \item Currently there is support for three programming languages: C, Julia, and Python
+    \item Currently there is for two interfaces: initial-value problems for ODEs
+      and nonlinear optimization (WIP)
+    \item Cross-language interoperability does not sacrifice performance,
+      as arrays are shared
+    \onslide<2->
+    \item We are open for collaborations and contributions!
+  \end{itemize}
+\end{frame}
+
+%% \input{slides/mardi.tex}
 
 \begin{frame}
   \centering
@@ -510,6 +579,25 @@
   \includegraphics[width=0.618\linewidth]{logos/logos}
 \end{frame}
 
-% \appendix
-% \begin{frame}{Backup slide 1}
+\appendix
+% \begin{frame}{Backup slide 1} ...
+
+\begin{frame}
+  \frametitle{(BU) Performance study: right-hand side implementations}
+
+  \centering
+  Runtimes of only right-hand side functions
+  evaluated 10\,000 times at $N=6\,400$
+  \vspace{1em}
+
+  \begin{tabular}{l c}
+    \toprule
+    Implementation language & Runtime, seconds    \\
+    \midrule
+    C (Clang)               & 0.115 \(\pm\) 0.008 \\
+    Julia                   & 0.122 \(\pm\) 0.016 \\
+    Python (Numba)          & 0.116 \(\pm\) 0.001 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
 \end{document}
