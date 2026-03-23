@@ -9,6 +9,7 @@ at the [Mathematics Münster](https://www.uni-muenster.de/MathematicsMuenster/),
 
 # Changes
 
+- 2026-03-23: [GAMM 96th Annual Meeting, Stuttgart, Germany][10]
 - 2026-03-05: [6th Conference for Research Software Engineering in Germany deRSE26, Stuttgart, Germany][9]
 - 2025-12-04: [GAMM RSE&RDM Kickoff Meeting, Braunschweig, Germany][8]
 - 2025-10-29: Oberseminar Numeric, Münster, Germany
@@ -30,3 +31,5 @@ such as code from the preamble and `.latexmkrc` file.
 
 [9]: https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2026-03-05-derse26
 [8]: https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2025-12-04-gamm-rse-rdm
+[10]:
+https://github.com/dmitry-kabanov/talk-mardi-open-interfaces/releases/v2026-03-17-gamm-96th-annual-meeting
